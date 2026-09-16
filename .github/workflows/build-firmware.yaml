@@ -1,0 +1,21 @@
+name: Create Board Firmware
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build-firmware:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - uses: ./ext/rusefi/.github/workflows/custom-board-build
+        with:
+          artifacts: bin srec hex list map elf bundle autoupdate
+          uploads: ini
+          push: false
+          run_simulator: false
+          MY_REPO_PAT: ${{secrets.MY_REPO_PAT}}

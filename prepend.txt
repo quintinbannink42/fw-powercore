@@ -1,0 +1,1 @@
+# hellen-pdm-razor prepend — board-specific generated config hooks

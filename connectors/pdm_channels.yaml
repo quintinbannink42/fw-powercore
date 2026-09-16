@@ -1,0 +1,249 @@
+#
+# PowerCore — logical PDM channels + e-fuse trip placeholders
+# DRAFT (FW-0b) for TunerStudio / INI codegen. Not consumed by upstream
+# rusEFI connector tooling yet — see connectors/README.md.
+#
+# Product: PowerCore standalone PDM (NOT an engine ECU).
+# Pins: hellen-pdm-razor/PINMAP.md + board_configuration.cpp
+#
+
+pdm_meta:
+  product: PowerCore
+  product_class: PDM
+  former_names: [hellen-pdm-razor, pdmrazora]
+  short_board_name: powercore
+  firmware_id: powercore
+  mcu_module: mega-mcu144
+  protection_base: protected_gpio
+  note: >
+    Build e-fuse state machine ON TOP OF protected_gpio / tdg-pdm8 patterns.
+    Do not invent a parallel protection layer. First bank: HP1-4 + ADIO1-4.
+    AmpsPerVolt cal blocked on first silicon (BOM starters 19.3 / 4.26).
+
+# Shared TunerStudio field stubs for every protected output (INI codegen)
+trip_param_schema:
+  - name: inrush_limit_a
+    ts_label: Inrush limit (A)
+    unit: A
+    placeholder: true
+  - name: inrush_window_ms
+    ts_label: Inrush window (ms)
+    unit: ms
+    placeholder: true
+  - name: oc_limit_a
+    ts_label: Overcurrent / continuous limit (A)
+    unit: A
+    placeholder: true
+  - name: trip_time_ms
+    ts_label: Trip time (ms)
+    unit: ms
+    placeholder: true
+  - name: retry_count
+    ts_label: Retry count
+    placeholder: true
+  - name: latch_on_fault
+    ts_label: Latch on fault
+    type: bool
+    placeholder: true
+
+channels:
+  # ===== High-power HP1-4 (protected_gpio bank) =====
+  - name: HP1
+    group: high_power
+    en: H144_OUT_PWM1
+    en_edge: OUT_PWM1
+    current_sense: H144_IN_AUX1_ANALOG
+    current_edge: IN_AUX1
+    dir_optional: H144_OUT_IO1
+    amps_per_volt: 19.3
+    max_current_a: 60.0
+    protected_gpio: PROTECTED_PIN_0
+    trip_params: inherit
+    superseal_pins: [14, 20]
+
+  - name: HP2
+    group: high_power
+    en: H144_OUT_PWM2
+    en_edge: OUT_PWM2
+    current_sense: H144_IN_AUX2_ANALOG
+    current_edge: IN_AUX2
+    dir_optional: H144_OUT_IO2
+    amps_per_volt: 19.3
+    max_current_a: 60.0
+    protected_gpio: PROTECTED_PIN_1
+    trip_params: inherit
+    superseal_pins: [1, 8]
+
+  - name: HP3
+    group: high_power
+    en: H144_OUT_PWM3
+    en_edge: OUT_PWM3
+    current_sense: H144_IN_AUX3_ANALOG
+    current_edge: IN_AUX3
+    dir_optional: H144_OUT_IO3
+    amps_per_volt: 19.3
+    max_current_a: 60.0
+    protected_gpio: PROTECTED_PIN_2
+    trip_params: inherit
+    note: Confirm IN_AUX3/AUX4 orientation on mega-mcu144 0.7
+    superseal_pins: [7, 13]
+
+  - name: HP4
+    group: high_power
+    en: H144_OUT_PWM4
+    en_edge: OUT_PWM4
+    current_sense: H144_IN_AUX4_ANALOG
+    current_edge: IN_AUX4
+    dir_optional: H144_OUT_IO4
+    amps_per_volt: 19.3
+    max_current_a: 60.0
+    protected_gpio: PROTECTED_PIN_3
+    trip_params: inherit
+    superseal_pins: [19, 26]
+
+  # ===== ADIO1-4 (protected_gpio bank) =====
+  - name: ADIO1
+    group: adio
+    en: H144_OUT_PWM5
+    en_edge: OUT_PWM5
+    current_sense: H144_IN_MAP1
+    voltage_sense: H144_IN_TPS
+    pull_up: H144_OUT_IO9
+    amps_per_volt: 4.26
+    max_current_a: 10.0
+    protected_gpio: PROTECTED_PIN_4
+    trip_params: inherit
+    superseal_pins: [21]
+
+  - name: ADIO2
+    group: adio
+    en: H144_OUT_PWM6
+    en_edge: OUT_PWM6
+    current_sense: H144_IN_MAP2
+    voltage_sense: H144_IN_PPS
+    pull_up: H144_OUT_IO10
+    amps_per_volt: 4.26
+    max_current_a: 10.0
+    protected_gpio: PROTECTED_PIN_5
+    trip_params: inherit
+    superseal_pins: [15]
+
+  - name: ADIO3
+    group: adio
+    en: H144_OUT_PWM7
+    en_edge: OUT_PWM7
+    current_sense: H144_IN_MAP3
+    voltage_sense: EFI_ADC_20
+    voltage_note: IN_TPS2 mux — needs ADC_MUX_PIN PF2 + PWR_EN
+    pull_up: H144_OUT_IO11
+    amps_per_volt: 4.26
+    max_current_a: 10.0
+    protected_gpio: PROTECTED_PIN_6
+    trip_params: inherit
+    superseal_pins: [22]
+
+  - name: ADIO4
+    group: adio
+    en: H144_OUT_PWM8
+    en_edge: OUT_PWM8
+    current_sense: H144_IN_O2S
+    voltage_sense: EFI_ADC_19
+    voltage_note: IN_PPS2 mux — needs ADC_MUX_PIN PF2 + PWR_EN
+    pull_up: H144_OUT_IO12
+    amps_per_volt: 4.26
+    max_current_a: 10.0
+    protected_gpio: PROTECTED_PIN_7
+    trip_params: inherit
+    superseal_pins: [16]
+
+  # ===== ADIO5-8 (plain outs rev1; trip params still exposed for INI / future SW fuse) =====
+  - name: ADIO5
+    group: adio
+    en: H144_OUT_IO5
+    en_edge: OUT_IO5
+    current_sense: H144_IN_O2S2
+    voltage_sense: H144_IN_CLT
+    pull_up: H144_OUT_IO13
+    amps_per_volt: 4.26
+    max_current_a: 10.0
+    protected_gpio: null
+    protection_status: TODO_second_bank_or_sw_fuse
+    trip_params: inherit
+    superseal_pins: [23]
+
+  - name: ADIO6
+    group: adio
+    en: H144_OUT_IO6
+    en_edge: OUT_IO6
+    current_sense: IN_RES1
+    current_note: PF9
+    voltage_sense: H144_IN_IAT
+    pull_up: H144_GP_IO1
+    amps_per_volt: 4.26
+    max_current_a: 10.0
+    protected_gpio: null
+    protection_status: TODO_second_bank_or_sw_fuse
+    trip_params: inherit
+    superseal_pins: [17]
+
+  - name: ADIO7
+    group: adio
+    en: H144_OUT_IO7
+    en_edge: OUT_IO7
+    current_sense: IN_RES2
+    current_note: PF10
+    voltage_sense: EFI_ADC_29
+    voltage_note: IN_AT1 mux
+    pull_up: H144_GP_IO2
+    amps_per_volt: 4.26
+    max_current_a: 10.0
+    protected_gpio: null
+    protection_status: TODO_second_bank_or_sw_fuse
+    trip_params: inherit
+    superseal_pins: [24]
+
+  - name: ADIO8
+    group: adio
+    en: H144_OUT_IO8
+    en_edge: OUT_IO8
+    current_sense: IN_RES3
+    current_note: PF8
+    voltage_sense: EFI_ADC_28
+    voltage_note: IN_AT2 mux
+    pull_up: H144_GP_IO3
+    amps_per_volt: 4.26
+    max_current_a: 10.0
+    protected_gpio: null
+    protection_status: TODO_second_bank_or_sw_fuse
+    trip_params: inherit
+    superseal_pins: [18]
+
+system:
+  - name: VBATT
+    id: H144_IN_VBATT
+    edge: IN_VIGN
+    divider: 11.0
+    function: Battery / IGN_SW sense
+    superseal_pins: [4]
+
+  - name: CAN
+    tx: H144_CAN_TX
+    rx: H144_CAN_RX
+    function: On-module CAN transceiver; consume rusEFI ECU telemetry (FW-CAN)
+    superseal_pins: [3, 10]
+
+  - name: PWR_EN
+    id: H144_GP8
+    mcu: PE10
+    function: Must drive high for SENSOR_5V / switched analogs / SD
+
+  - name: SENSOR_5V
+    function: V5A_SWITCHABLE via PWR_EN; ≤50 mA per SuperSeal pin
+    superseal_pins: [5, 11]
+
+info:
+  title: PowerCore / PDM
+  name: Logical channels
+  directory: powercore
+  cid: pdm_channels
+  order: 1

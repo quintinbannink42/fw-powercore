@@ -1,0 +1,172 @@
+#
+# PowerCore — AMP SuperSeal 1.0 26-way (Link "Connector C")
+# DRAFT for PDM pinout / INI — not engine ECU fields.
+# Board header: TE 9-6437287-8 (keying 1). Pin numbers = CONNECTOR.md.
+# MCU mapping: hellen-pdm-razor/PINMAP.md (mega-mcu144).
+#
+
+pins:
+  # --- High-power outputs (paired SuperSeal pins) ---
+  - pin: 14
+    id: H144_OUT_PWM1
+    class: outputs
+    ts_name: HP1 / PWR OUT 1
+    function: High-power output 1 (parallels pin 20); protected_gpio bank
+    type: hs
+
+  - pin: 20
+    function: High-power output 1 parallel feed (with pin 14)
+    type: hs
+
+  - pin: 1
+    id: H144_OUT_PWM2
+    class: outputs
+    ts_name: HP2 / PWR OUT 2
+    function: High-power output 2 (parallels pin 8); protected_gpio bank
+    type: hs
+
+  - pin: 8
+    function: High-power output 2 parallel feed (with pin 1)
+    type: hs
+
+  - pin: 7
+    id: H144_OUT_PWM3
+    class: outputs
+    ts_name: HP3 / PWR OUT 3
+    function: High-power output 3 (parallels pin 13); protected_gpio bank
+    type: hs
+
+  - pin: 13
+    function: High-power output 3 parallel feed (with pin 7)
+    type: hs
+
+  - pin: 19
+    id: H144_OUT_PWM4
+    class: outputs
+    ts_name: HP4 / PWR OUT 4
+    function: High-power output 4 (parallels pin 26); protected_gpio bank
+    type: hs
+
+  - pin: 26
+    function: High-power output 4 parallel feed (with pin 19)
+    type: hs
+
+  # --- ADIO 1-8 ---
+  - pin: 21
+    id: [H144_OUT_PWM5, H144_IN_MAP1, H144_IN_TPS]
+    class: [outputs, analog_inputs, analog_inputs]
+    ts_name: ADIO1
+    function: A/D I/O 1 — EN PWM5, I on MAP1, V on TPS; pull-up OUT_IO9
+    type: hs
+
+  - pin: 15
+    id: [H144_OUT_PWM6, H144_IN_MAP2, H144_IN_PPS]
+    class: [outputs, analog_inputs, analog_inputs]
+    ts_name: ADIO2
+    function: A/D I/O 2 — EN PWM6, I on MAP2, V on PPS; pull-up OUT_IO10
+    type: hs
+
+  - pin: 22
+    id: [H144_OUT_PWM7, H144_IN_MAP3]
+    class: [outputs, analog_inputs]
+    ts_name: ADIO3
+    function: A/D I/O 3 — EN PWM7, I on MAP3, V on TPS2 mux; pull-up OUT_IO11
+    type: hs
+
+  - pin: 16
+    id: [H144_OUT_PWM8, H144_IN_O2S]
+    class: [outputs, analog_inputs]
+    ts_name: ADIO4
+    function: A/D I/O 4 — EN PWM8, I on O2S, V on PPS2 mux; pull-up OUT_IO12
+    type: hs
+
+  - pin: 23
+    id: [H144_OUT_IO5, H144_IN_O2S2, H144_IN_CLT]
+    class: [outputs, analog_inputs, analog_inputs]
+    ts_name: ADIO5
+    function: A/D I/O 5 — EN IO5, I on O2S2, V on CLT; pull-up OUT_IO13; SW protect TODO
+    type: hs
+
+  - pin: 17
+    id: [H144_OUT_IO6, H144_IN_IAT]
+    class: [outputs, analog_inputs]
+    ts_name: ADIO6
+    function: A/D I/O 6 — EN IO6, I on RES1, V on IAT; pull-up GP_IO1; SW protect TODO
+    type: hs
+
+  - pin: 24
+    id: H144_OUT_IO7
+    class: outputs
+    ts_name: ADIO7
+    function: A/D I/O 7 — EN IO7, I on RES2, V on AT1 mux; pull-up GP_IO2; SW protect TODO
+    type: hs
+
+  - pin: 18
+    id: H144_OUT_IO8
+    class: outputs
+    ts_name: ADIO8
+    function: A/D I/O 8 — EN IO8, I on RES3, V on AT2 mux; pull-up GP_IO3; SW protect TODO
+    type: hs
+
+  # --- System ---
+  - pin: 3
+    id: H144_CAN_TX
+    class: outputs
+    ts_name: CAN H
+    function: CAN bus High (on-module transceiver)
+    type: can
+
+  - pin: 10
+    id: H144_CAN_RX
+    class: outputs
+    ts_name: CAN L
+    function: CAN bus Low (on-module transceiver)
+    type: can
+
+  - pin: 4
+    id: H144_IN_VBATT
+    class: analog_inputs
+    ts_name: IGN SW / VBATT sense
+    function: Ignition switched +12 V sense via 11:1 divider → IN_VIGN / H144_IN_VBATT
+    type: 12V
+
+  - pin: 5
+    function: SENSOR 5V supply (≤50 mA); enabled via PWR_EN H144_GP8
+    type: 5v
+    ts_name: SENSOR 5V A
+
+  - pin: 11
+    function: SENSOR 5V supply second pin; spread loads; via PWR_EN
+    type: 5v
+    ts_name: SENSOR 5V B
+
+  - pin: 6
+    function: SENSOR GND — AGND island; do not bond to chassis
+    type: agnd
+    ts_name: SENSOR GND A
+
+  - pin: 12
+    function: SENSOR GND — AGND island; do not bond to chassis
+    type: agnd
+    ts_name: SENSOR GND B
+
+  - pin: 2
+    function: N/C
+    type: nc
+
+  - pin: 9
+    function: N/C
+    type: nc
+
+  - pin: 25
+    function: N/C
+    type: nc
+
+info:
+  title: PowerCore / PDM
+  name: SuperSeal 26 (Connector C)
+  directory: powercore
+  cid: superseal26
+  order: 0
+  board_url: ""
+  # image: add photo later for interactive pinout
