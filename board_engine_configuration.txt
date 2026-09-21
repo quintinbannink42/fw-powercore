@@ -1,16 +1,16 @@
 ! PowerCore PDM persistent fields (spliced into engine_configuration_s)
 ! Access as engineConfiguration->pdmChannelTrip[i] / pdmCan*.
-! Placeholders until the e-fuse SM / CAN consume workstreams read them.
+! e-fuse SM reads pdmChannelTrip[] (see docs/EFUSE.md). CAN consume is still UI-only.
 ! Channel order: 1-4 HP1-HP4, 5-12 ADIO1-ADIO8.
 !
 ! split_lines does not trim: `bit` lines must start at column 0 (see alphax-silver).
 
 struct pdm_channel_trip_s
-float inrushLimitA;Inrush current limit. Placeholder until e-fuse SM reads this.;"A", 1, 0, 0, 200, 1
-float ocLimitA;Continuous overcurrent / trip limit. Placeholder until e-fuse SM reads this.;"A", 1, 0, 0, 200, 1
-uint16_t inrushWindowMs;Inrush window. Placeholder until e-fuse SM.;"ms", 1, 0, 0, 10000, 0
-uint16_t tripTimeMs;Overcurrent trip time. Placeholder until e-fuse SM.;"ms", 1, 0, 0, 10000, 0
-uint8_t retryCount;Retries before latch. Placeholder until e-fuse SM.;"", 1, 0, 0, 20, 0
+float inrushLimitA;Inrush / fast-short current limit (instant trip).;"A", 1, 0, 0, 200, 1
+float ocLimitA;Continuous overcurrent limit (after inrush window).;"A", 1, 0, 0, 200, 1
+uint16_t inrushWindowMs;Inrush window after turn-on. OC limit is ignored during this window.;"ms", 1, 0, 0, 10000, 0
+uint16_t tripTimeMs;Time above OC limit (after window) before trip.;"ms", 1, 0, 0, 10000, 0
+uint8_t retryCount;Auto-retries after a trip before latch. 0 = latch immediately.;"", 1, 0, 0, 20, 0
 bit latchOnFault,"yes","no"
 end_struct
 

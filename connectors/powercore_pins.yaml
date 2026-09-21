@@ -54,29 +54,29 @@ pins:
     function: ADIO4 high-side enable (protected bank)
     type: hs
 
-  # ADIO5-8 EN — STM32 pins per PINMAP (OUT_IO5..8)
-  - id: D2
+  # ADIO5-8 EN — second e-fuse bank (PROTECTED_PIN_8..11)
+  - id: PROTECTED_PIN_8
     class: outputs
     ts_name: ADIO5
-    function: ADIO5 enable PD2 (SW protect TODO)
+    function: ADIO5 high-side enable (e-fuse bank)
     type: hs
 
-  - id: G11
+  - id: PROTECTED_PIN_9
     class: outputs
     ts_name: ADIO6
-    function: ADIO6 enable PG11 (SW protect TODO)
+    function: ADIO6 high-side enable (e-fuse bank; ISENSE not EFI_ADC yet)
     type: hs
 
-  - id: G3
+  - id: PROTECTED_PIN_10
     class: outputs
     ts_name: ADIO7
-    function: ADIO7 enable PG3 (SW protect TODO)
+    function: ADIO7 high-side enable (e-fuse bank; ISENSE not EFI_ADC yet)
     type: hs
 
-  - id: G4
+  - id: PROTECTED_PIN_11
     class: outputs
     ts_name: ADIO8
-    function: ADIO8 enable PG4 (SW protect TODO)
+    function: ADIO8 high-side enable (e-fuse bank; ISENSE not EFI_ADC yet)
     type: hs
 
   - id: EFI_ADC_5

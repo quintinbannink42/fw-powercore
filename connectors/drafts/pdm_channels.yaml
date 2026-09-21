@@ -1,5 +1,5 @@
 #
-# PowerCore — logical PDM channels + e-fuse trip placeholders
+# PowerCore — logical PDM channels + e-fuse trip (consumed by firmware)
 # DRAFT (FW-0b) for TunerStudio / INI codegen. Not consumed by upstream
 # rusEFI connector tooling yet — see connectors/README.md.
 #
@@ -14,10 +14,11 @@ pdm_meta:
   short_board_name: powercore
   firmware_id: powercore
   mcu_module: mega-mcu144
-  protection_base: protected_gpio
+  protection_base: protected_gpio + pdm_efuse SM
   note: >
-    Build e-fuse state machine ON TOP OF protected_gpio / tdg-pdm8 patterns.
-    Do not invent a parallel protection layer. First bank: HP1-4 + ADIO1-4.
+    E-fuse state machine ON TOP OF protected_gpio / tdg-pdm8 patterns.
+    Do not invent a parallel protection layer. Bank: HP1-4 + ADIO1-8
+    (PROTECTED_PIN_0..11). ADIO6-8 SW OC waits on ADC3 analog.
     AmpsPerVolt cal blocked on first silicon (BOM starters 19.3 / 4.26).
 
 # Shared TunerStudio field stubs for every protected output (INI codegen)
@@ -25,26 +26,26 @@ trip_param_schema:
   - name: inrush_limit_a
     ts_label: Inrush limit (A)
     unit: A
-    placeholder: true
+    placeholder: false
   - name: inrush_window_ms
     ts_label: Inrush window (ms)
     unit: ms
-    placeholder: true
+    placeholder: false
   - name: oc_limit_a
     ts_label: Overcurrent / continuous limit (A)
     unit: A
-    placeholder: true
+    placeholder: false
   - name: trip_time_ms
     ts_label: Trip time (ms)
     unit: ms
-    placeholder: true
+    placeholder: false
   - name: retry_count
     ts_label: Retry count
-    placeholder: true
+    placeholder: false
   - name: latch_on_fault
     ts_label: Latch on fault
     type: bool
-    placeholder: true
+    placeholder: false
 
 channels:
   # ===== High-power HP1-4 (protected_gpio bank) =====
@@ -156,7 +157,7 @@ channels:
     trip_params: inherit
     superseal_pins: [16]
 
-  # ===== ADIO5-8 (plain outs rev1; trip params still exposed for INI / future SW fuse) =====
+  # ===== ADIO5-8 (second e-fuse bank PROTECTED_PIN_8..11) =====
   - name: ADIO5
     group: adio
     en: H144_OUT_IO5
@@ -166,8 +167,8 @@ channels:
     pull_up: H144_OUT_IO13
     amps_per_volt: 4.26
     max_current_a: 10.0
-    protected_gpio: null
-    protection_status: TODO_second_bank_or_sw_fuse
+    protected_gpio: PROTECTED_PIN_8
+    protection_status: e_fuse_with_isense
     trip_params: inherit
     superseal_pins: [23]
 
@@ -176,13 +177,13 @@ channels:
     en: H144_OUT_IO6
     en_edge: OUT_IO6
     current_sense: IN_RES1
-    current_note: PF9
+    current_note: PF9 — not EFI_ADC yet (ADC3 analog leftover)
     voltage_sense: H144_IN_IAT
     pull_up: H144_GP_IO1
     amps_per_volt: 4.26
     max_current_a: 10.0
-    protected_gpio: null
-    protection_status: TODO_second_bank_or_sw_fuse
+    protected_gpio: PROTECTED_PIN_9
+    protection_status: e_fuse_pin_owned_sw_oc_waits_adc3
     trip_params: inherit
     superseal_pins: [17]
 
@@ -191,14 +192,14 @@ channels:
     en: H144_OUT_IO7
     en_edge: OUT_IO7
     current_sense: IN_RES2
-    current_note: PF10
+    current_note: PF10 — not EFI_ADC yet (ADC3 analog leftover)
     voltage_sense: EFI_ADC_29
     voltage_note: IN_AT1 mux
     pull_up: H144_GP_IO2
     amps_per_volt: 4.26
     max_current_a: 10.0
-    protected_gpio: null
-    protection_status: TODO_second_bank_or_sw_fuse
+    protected_gpio: PROTECTED_PIN_10
+    protection_status: e_fuse_pin_owned_sw_oc_waits_adc3
     trip_params: inherit
     superseal_pins: [24]
 
@@ -207,14 +208,14 @@ channels:
     en: H144_OUT_IO8
     en_edge: OUT_IO8
     current_sense: IN_RES3
-    current_note: PF8
+    current_note: PF8 — not EFI_ADC yet (ADC3 analog leftover)
     voltage_sense: EFI_ADC_28
     voltage_note: IN_AT2 mux
     pull_up: H144_GP_IO3
     amps_per_volt: 4.26
     max_current_a: 10.0
-    protected_gpio: null
-    protection_status: TODO_second_bank_or_sw_fuse
+    protected_gpio: PROTECTED_PIN_11
+    protection_status: e_fuse_pin_owned_sw_oc_waits_adc3
     trip_params: inherit
     superseal_pins: [18]
 
