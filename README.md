@@ -40,8 +40,9 @@ Upstream pattern: `tdg-pdm8` + rusEFI `protected_gpio` with the e-fuse SM filled
 
 Draft rusEFI-style YAML under [`connectors/`](connectors/) (pin names for INI
 codegen). TunerStudio is **PDM-shaped**: see [`docs/TUNERSTUDIO_PDM.md`](docs/TUNERSTUDIO_PDM.md)
-for how to regenerate `generated/tunerstudio/generated/rusefi_powercore.ini`
-and what remains for CAN consume. E-fuse SM: [`docs/EFUSE.md`](docs/EFUSE.md).
+for how to regenerate `generated/tunerstudio/generated/rusefi_powercore.ini`.
+E-fuse SM: [`docs/EFUSE.md`](docs/EFUSE.md). CAN consume + status DBC:
+[`docs/CAN.md`](docs/CAN.md).
 
 ## Bootstrap
 
@@ -63,11 +64,11 @@ GitHub Actions: `.github/workflows/build-firmware.yaml` (needs submodule + optio
 3. Apply known load; **calibrate** `HP_AMPS_PER_VOLT` / `ADIO_AMPS_PER_VOLT` (BOM starters only until silicon).
 4. Verify trip: inrush window, delayed OC, fast short, retry/latch ([`docs/EFUSE.md`](docs/EFUSE.md)).
 5. Enable ADIO pull-ups; check open-circuit voltage ~5 V through 4k7.
+6. Point at a rusEFI ECU and enable consume/status ([`docs/CAN.md`](docs/CAN.md)).
 
 ## Open firmware work
 
 - ADC3 analog for ADIO6–8 (`H144_IN_RES1-3`) so software OC matches ADIO1–5
-- CAN consume from rusEFI ECU → pump/fan/output logic + status DBC (TS placeholders only)
 - Over-temp staged shutdown (no TS field yet)
 - Optional HP DIR pins (`H144_OUT_IO1`–`4`) for half/full bridge
 

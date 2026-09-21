@@ -31,9 +31,10 @@ No invented pins. KiCad / copper (`pdmrazora`) untouched. Not waiting on Jeoff f
 - **No parallel protection layer.** E-fuse SM builds on `protected_gpio` / `tdg-pdm8` patterns only.
 - Do not touch `/workspace/hellen-pdm-razor` KiCad or HELLCORE.
 
-## Next (after e-fuse SM)
+## Next (after CAN consume)
 
-1. CAN consume signal list (rusEFI ECU broadcast → pump/fan/output logic). See `pdmCan*` fields.
+1. ADC3 analog for ADIO6-8 RES ISENSE.
+2. Over-temp staged shutdown (no TS field yet).
 
 ## Compile / submodule status
 
@@ -96,3 +97,9 @@ Electronic-fuse SM on the `protected_gpio` pattern reads `pdmChannelTrip[12]`.
 - **INI:** `generated/tunerstudio/generated/rusefi_powercore.ini` — trip field tooltips no longer say placeholder; signature contains `powercore`
 - **Bin:** `ext/rusefi/firmware/build/rusefi.bin` 577628 B; flash0 73.45% of 768 KB
 - `BOARD_EXT_GPIOCHIPS` includes a reserved slot (`BOARD_TLE9104_COUNT=1`) so `gpiochip_register` is not a stub
+
+## FW-CAN — 2026-09-21
+
+CAN consume from rusEFI ECU verbose broadcast + PDM status TX. See [`CAN.md`](CAN.md)
+and `firmware/powercore_pdm.dbc`. Pump/fan examples drive HP1–3 through the e-fuse
+bank. Host tests: `firmware/run_pdm_can_logic_test.sh`.

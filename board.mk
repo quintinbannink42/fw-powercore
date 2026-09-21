@@ -11,7 +11,8 @@ BOARDINC += $(BOARD_DIR)/firmware
 include $(BOARD_DIR)/meta-info.env
 
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp \
-	$(BOARD_DIR)/firmware/pdm_efuse.cpp
+	$(BOARD_DIR)/firmware/pdm_efuse.cpp \
+	$(BOARD_DIR)/firmware/pdm_can.cpp
 
 # Hellen mega-mcu144 shared flags (critical LED, HELLEN_BOARD_MM144, board ID)
 BOARDS_DIR = $(BOARD_DIR)/ext/rusefi/firmware/config/boards

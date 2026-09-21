@@ -11,6 +11,9 @@
  * (inrush window / delayed OC / fast short / retry / latch) reading
  * engineConfiguration->pdmChannelTrip[]. Do NOT invent a parallel GPIO layer.
  *
+ * CAN: consume rusEFI ECU verbose broadcast (pdmCanConsume*) and publish
+ * channel current/fault (pdmCanStatus*). See docs/CAN.md.
+ *
  * Pin map: hellen-pdm-razor/PINMAP.md (authoritative)
  */
 
@@ -18,6 +21,7 @@
 
 #include "hellen_meta.h"
 #include "pdm_efuse.h"
+#include "pdm_can.h"
 #include "board_overrides.h"
 
 // LED pins: provided by hellen_leds_144.cpp (hellen-common144.mk)
@@ -69,6 +73,7 @@ static void pdmBoardInitHardware() {
 	setHellenEnPin(H144_GP8); // PE10 PWR_EN — required before analog reads
 
 	pdmEfuse_add(Gpio::PROTECTED_PIN_0, kProtectedCfgs);
+	pdmCan_initHardware();
 
 	for (size_t i = 0; i < efi::size(adioPullUp); i++) {
 		char name[16];
@@ -79,7 +84,24 @@ static void pdmBoardInitHardware() {
 }
 
 static void pdmBoardPeriodicFast() {
+	pdmCan_periodicFast();
 	pdmEfuse_check();
+}
+
+static void pdmBoardConfigOverrides() {
+	pdmCan_configOverrides();
+}
+
+static void pdmBoardOnConfigurationChange(const engine_configuration_s* previousConfiguration) {
+	pdmCan_onConfigurationChange(previousConfiguration);
+}
+
+static void pdmBoardStopHardware() {
+	pdmCan_onStopHardware();
+}
+
+static void pdmBoardStartHardware() {
+	pdmCan_onStartHardware();
 }
 
 static void pdmBoardDefaultConfiguration() {
@@ -93,6 +115,9 @@ static void pdmBoardDefaultConfiguration() {
 	// H144_CAN_* macros already include Gpio::
 	engineConfiguration->canTxPin = H144_CAN_TX;
 	engineConfiguration->canRxPin = H144_CAN_RX;
+	engineConfiguration->canReadEnabled = true;
+	engineConfiguration->canWriteEnabled = true;
+	engineConfiguration->canBaudRate = static_cast<can_baudrate_e>(can_baudrate_e_B500KBPS);
 
 	// LUA_PWM_COUNT=8: PWM-capable protected bank HP1-4 + ADIO1-4
 	engineConfiguration->luaOutputPins[0] = Gpio::PROTECTED_PIN_0; // HP1
@@ -174,5 +199,13 @@ static void pdmBoardDefaultConfiguration() {
 void setup_custom_board_overrides() {
 	custom_board_InitHardware = pdmBoardInitHardware;
 	custom_board_DefaultConfiguration = pdmBoardDefaultConfiguration;
+	custom_board_ConfigOverrides = pdmBoardConfigOverrides;
+	custom_board_OnConfigurationChange = pdmBoardOnConfigurationChange;
+	custom_board_StopHardware = pdmBoardStopHardware;
+	custom_board_StartHardware = pdmBoardStartHardware;
 	custom_board_periodicFastCallback = pdmBoardPeriodicFast;
+#if EFI_CAN_SUPPORT
+	custom_board_can_rx = pdmCan_onRx;
+	custom_board_update_dash = pdmCan_updateDash;
+#endif
 }

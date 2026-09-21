@@ -34,6 +34,8 @@ public:
 	float currentA() const { return m_amps; }
 	PdmEfuseState state() const { return m_sm.state(); }
 	PdmEfuseTripReason reason() const { return m_sm.reason(); }
+	bool requestedOn() const { return m_requestedOn; }
+	bool isFaulted() const { return m_sm.isFaulted(); }
 
 private:
 	PdmEfuseTrip loadTrip() const;
@@ -168,6 +170,9 @@ public:
 	float currentA(size_t pin) const;
 	PdmEfuseState state(size_t pin) const;
 	PdmEfuseTripReason reason(size_t pin) const;
+	bool requestedOn(size_t pin) const;
+	bool isDriven(size_t pin) const;
+	bool isFaulted(size_t pin) const;
 
 private:
 	PdmEfuseGpio m_channels[kPdmEfuseChannels];
@@ -240,6 +245,27 @@ PdmEfuseTripReason PdmEfuseGpios::reason(size_t pin) const {
 	return m_channels[pin].reason();
 }
 
+bool PdmEfuseGpios::requestedOn(size_t pin) const {
+	if (pin >= kPdmEfuseChannels) {
+		return false;
+	}
+	return m_channels[pin].requestedOn();
+}
+
+bool PdmEfuseGpios::isDriven(size_t pin) const {
+	if (pin >= kPdmEfuseChannels) {
+		return false;
+	}
+	return m_channels[pin].get() != 0;
+}
+
+bool PdmEfuseGpios::isFaulted(size_t pin) const {
+	if (pin >= kPdmEfuseChannels) {
+		return false;
+	}
+	return m_channels[pin].isFaulted();
+}
+
 static PdmEfuseGpios s_efuse;
 static bool s_didInit = false;
 
@@ -274,4 +300,16 @@ PdmEfuseState pdmEfuse_getState(size_t channel) {
 
 PdmEfuseTripReason pdmEfuse_getReason(size_t channel) {
 	return s_efuse.reason(channel);
+}
+
+bool pdmEfuse_isRequestedOn(size_t channel) {
+	return s_efuse.requestedOn(channel);
+}
+
+bool pdmEfuse_isDriven(size_t channel) {
+	return s_efuse.isDriven(channel);
+}
+
+bool pdmEfuse_isFaulted(size_t channel) {
+	return s_efuse.isFaulted(channel);
 }
