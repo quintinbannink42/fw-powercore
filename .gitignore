@@ -20,3 +20,5 @@ ext/rusefi/**/build/
 
 # Large generated binaries (keep .ini sources if present under generated/)
 *.apk
+generated/generated.patch
+/unit_tests/
