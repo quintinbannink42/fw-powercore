@@ -708,31 +708,31 @@ static_assert(sizeof(vr_threshold_s) == 16);
 // start of pdm_channel_trip_s
 struct pdm_channel_trip_s {
 	/**
-	 * Inrush current limit. Placeholder until e-fuse SM reads this.
+	 * Inrush / fast-short current limit (instant trip).
 	 * units: A
 	 * offset 0
 	 */
 	float inrushLimitA;
 	/**
-	 * Continuous overcurrent / trip limit. Placeholder until e-fuse SM reads this.
+	 * Continuous overcurrent limit (after inrush window).
 	 * units: A
 	 * offset 4
 	 */
 	float ocLimitA;
 	/**
-	 * Inrush window. Placeholder until e-fuse SM.
+	 * Inrush window after turn-on. OC limit is ignored during this window.
 	 * units: ms
 	 * offset 8
 	 */
 	uint16_t inrushWindowMs;
 	/**
-	 * Overcurrent trip time. Placeholder until e-fuse SM.
+	 * Time above OC limit (after window) before trip.
 	 * units: ms
 	 * offset 10
 	 */
 	uint16_t tripTimeMs;
 	/**
-	 * Retries before latch. Placeholder until e-fuse SM.
+	 * Auto-retries after a trip before latch. 0 = latch immediately.
 	 * offset 12
 	 */
 	uint8_t retryCount;

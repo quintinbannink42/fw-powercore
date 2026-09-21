@@ -28,7 +28,7 @@ public:
 	int get() const;
 	brain_pin_diag_e getDiag() const;
 
-	void configure(size_t index, const ProtectedGpioConfig& config);
+	void configure(size_t index, const ProtectedGpioConfig& pinCfg);
 	void check(uint32_t nowMs);
 
 	float currentA() const { return m_amps; }
@@ -48,9 +48,9 @@ private:
 	bool m_loggedTrip = false;
 };
 
-void PdmEfuseGpio::configure(size_t index, const ProtectedGpioConfig& config) {
+void PdmEfuseGpio::configure(size_t index, const ProtectedGpioConfig& pinCfg) {
 	m_index = index;
-	m_config = &config;
+	m_config = &pinCfg;
 	m_sm.reset();
 	m_requestedOn = false;
 	m_amps = 0;

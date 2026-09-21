@@ -10,6 +10,10 @@ const char* getBoardSpecificPinName(brain_pin_e brainPin) {
 			return "HP1";
 		case Gpio::PROTECTED_PIN_1:
 			return "HP2";
+		case Gpio::PROTECTED_PIN_10:
+			return "ADIO7";
+		case Gpio::PROTECTED_PIN_11:
+			return "ADIO8";
 		case Gpio::PROTECTED_PIN_2:
 			return "HP3";
 		case Gpio::PROTECTED_PIN_3:
@@ -26,10 +30,6 @@ const char* getBoardSpecificPinName(brain_pin_e brainPin) {
 			return "ADIO5";
 		case Gpio::PROTECTED_PIN_9:
 			return "ADIO6";
-		case Gpio::PROTECTED_PIN_10:
-			return "ADIO7";
-		case Gpio::PROTECTED_PIN_11:
-			return "ADIO8";
 		default:
 			return nullptr;
 	}
