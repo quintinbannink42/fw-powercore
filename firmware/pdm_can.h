@@ -14,9 +14,8 @@ void pdmCan_onConfigurationChange(const struct engine_configuration_s* previousC
 void pdmCan_configOverrides();
 void pdmCan_periodicFast();
 
-#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
-struct CANRxFrame;
-class CanCycle;
+#if EFI_CAN_SUPPORT
+#include "can.h"
 void pdmCan_onRx(size_t busIndex, const CANRxFrame& frame, efitick_t nowNt);
 void pdmCan_updateDash(CanCycle cycle);
 #endif

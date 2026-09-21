@@ -103,3 +103,12 @@ Electronic-fuse SM on the `protected_gpio` pattern reads `pdmChannelTrip[12]`.
 CAN consume from rusEFI ECU verbose broadcast + PDM status TX. See [`CAN.md`](CAN.md)
 and `firmware/powercore_pdm.dbc`. Pump/fan examples drive HP1–3 through the e-fuse
 bank. Host tests: `firmware/run_pdm_can_logic_test.sh`.
+
+### Compile result — 2026-09-21 (this CAN PR)
+
+**PASS** — `./compile_firmware.sh` on cloud VM with rusEFI `provide_gcc.sh` ARM GNU 14.2. Identity stayed `powercore`. Host tests: `firmware/run_pdm_host_tests.sh` all passed.
+
+- **Exit code:** 0
+- **INI:** `generated/tunerstudio/generated/rusefi_powercore.ini` — CAN consume/status dialog is live (not placeholder); signature contains `powercore`
+- **Bin:** `ext/rusefi/firmware/build/rusefi.bin` 579180 B; flash0 73.65% of 768 KB
+- TS signature: `rusEFI cursor/pdm-can-consume-0654.2026.09.21.powercore`

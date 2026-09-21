@@ -1925,10 +1925,10 @@ Delay before cutting fuel due to low oil pressure. Use this to ignore short pres
 
 
 ### pdmCanConsumeBaseId
-rusEFI ECU broadcast base ID to consume (pump/fan/output logic).
+rusEFI ECU verboseCanBaseAddress to consume (default 0x200).
 
 ### pdmCanStatusBaseId
-PowerCore status / fault TX base ID.
+PowerCore status TX base ID (default 0x240). DBC: firmware/powercore_pdm.dbc.
 
 ### knockSuppressMinTps
 Below TPS value all knock suppression will be disabled.

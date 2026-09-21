@@ -6262,13 +6262,13 @@ struct engine_configuration_s {
 	offset 4172 bit 31 */
 	bool unusedBit_991_31 : 1 {};
 	/**
-	 * rusEFI ECU broadcast base ID to consume (pump/fan/output logic).
+	 * rusEFI ECU verboseCanBaseAddress to consume (default 0x200).
 	 * units: id
 	 * offset 4176
 	 */
 	uint16_t pdmCanConsumeBaseId;
 	/**
-	 * PowerCore status / fault TX base ID.
+	 * PowerCore status TX base ID (default 0x240). DBC: firmware/powercore_pdm.dbc.
 	 * units: id
 	 * offset 4178
 	 */
