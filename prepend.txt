@@ -1,1 +1,12 @@
-# hellen-pdm-razor prepend — board-specific generated config hooks
+! PowerCore standalone PDM — board-specific TunerStudio / config hooks
+! Former stub name: hellen-pdm-razor
+! PDM environment (not ECU): hide engine-centric pages where possible; FW-INI spike next
+
+#define MAIN_HELP_URL "https://rusefi.com/"
+
+! Prefer showing output / aux / CAN over engine tables for bring-up
+#define ts_show_etb_pins false
+#define ts_show_analog_divider false
+#define ts_show_spi false
+#define ts_show_main_relay false
+#define ts_show_egt false

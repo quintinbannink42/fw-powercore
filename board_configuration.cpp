@@ -20,17 +20,7 @@
 #include "protected_gpio.h"
 #include "board_overrides.h"
 
-Gpio getCommsLedPin() {
-	return H144_LED2_GREEN;  // Gpio::G1
-}
-
-Gpio getWarningLedPin() {
-	return H144_LED3_BLUE;   // Gpio::E7
-}
-
-Gpio getRunningLedPin() {
-	return H144_LED4_YELLOW; // Gpio::E8
-}
+// LED pins: provided by hellen_leds_144.cpp (hellen-common144.mk)
 
 // BOM starters from HARDWARE_BOM.md (kILIS/RIS). Bench cal waits for first silicon.
 // HP: BTS50010-1TAD, kILIS≈52100, RIS=2.7k → ≈19.3 A/V
@@ -88,24 +78,20 @@ static void pdmBoardDefaultConfiguration() {
 	engineConfiguration->vbattDividerCoeff = 11.0f;
 	engineConfiguration->vbattAdcChannel = H144_IN_VBATT;
 
-	engineConfiguration->canTxPin = Gpio::H144_CAN_TX;
-	engineConfiguration->canRxPin = Gpio::H144_CAN_RX;
+	// H144_CAN_* macros already include Gpio::
+	engineConfiguration->canTxPin = H144_CAN_TX;
+	engineConfiguration->canRxPin = H144_CAN_RX;
 
-	// Protected: HP1-4, ADIO1-4
-	engineConfiguration->auxOutputPins[0] = Gpio::PROTECTED_PIN_0;
-	engineConfiguration->auxOutputPins[1] = Gpio::PROTECTED_PIN_1;
-	engineConfiguration->auxOutputPins[2] = Gpio::PROTECTED_PIN_2;
-	engineConfiguration->auxOutputPins[3] = Gpio::PROTECTED_PIN_3;
-	engineConfiguration->auxOutputPins[4] = Gpio::PROTECTED_PIN_4;
-	engineConfiguration->auxOutputPins[5] = Gpio::PROTECTED_PIN_5;
-	engineConfiguration->auxOutputPins[6] = Gpio::PROTECTED_PIN_6;
-	engineConfiguration->auxOutputPins[7] = Gpio::PROTECTED_PIN_7;
-
-	// ADIO5-8 enables (protection bank TODO)
-	engineConfiguration->auxOutputPins[8] = Gpio::H144_OUT_IO5;
-	engineConfiguration->auxOutputPins[9] = Gpio::H144_OUT_IO6;
-	engineConfiguration->auxOutputPins[10] = Gpio::H144_OUT_IO7;
-	engineConfiguration->auxOutputPins[11] = Gpio::H144_OUT_IO8;
+	// LUA_PWM_COUNT=8: map protected bank HP1-4 + ADIO1-4 (matches protected_gpio)
+	// ADIO5-8 EN (H144_OUT_IO5..8): expose via second bank / LUA_PWM_COUNT bump later
+	engineConfiguration->luaOutputPins[0] = Gpio::PROTECTED_PIN_0; // HP1
+	engineConfiguration->luaOutputPins[1] = Gpio::PROTECTED_PIN_1; // HP2
+	engineConfiguration->luaOutputPins[2] = Gpio::PROTECTED_PIN_2; // HP3
+	engineConfiguration->luaOutputPins[3] = Gpio::PROTECTED_PIN_3; // HP4
+	engineConfiguration->luaOutputPins[4] = Gpio::PROTECTED_PIN_4; // ADIO1
+	engineConfiguration->luaOutputPins[5] = Gpio::PROTECTED_PIN_5; // ADIO2
+	engineConfiguration->luaOutputPins[6] = Gpio::PROTECTED_PIN_6; // ADIO3
+	engineConfiguration->luaOutputPins[7] = Gpio::PROTECTED_PIN_7; // ADIO4
 
 	// Optional HP DIR: H144_OUT_IO1..IO4 — assign when bridge stage is fitted
 }

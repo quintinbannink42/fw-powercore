@@ -45,3 +45,26 @@ See bottom of this file after compile attempt (updated in-pass).
 
 - `ext/rusefi` submodule declared in `.gitmodules` but **not populated** in this stub workspace.
 - Per Boss: attempt init + `./compile_firmware.sh` if feasible; if auth/time blocks, document and stop — do not hang.
+
+## Compile result — 2026-09-21 ~06:11 SAST
+
+**PASS** — green firmware compile for PowerCore stub. Identity stayed `powercore` (no fallback to `powercorea`).
+
+- **Command:** `./compile_firmware.sh` (from `/workspace/pdm-rev1/fw-hellen-pdm-razor/`)
+- **Exit code:** 0
+- **Submodules:** `ext/rusefi` nested submodules init/update recursive completed (network OK)
+- **Toolchain note:** non-fatal `/bin/sh: 1: bc: not found` during post-link size calc; link/bin/hex still produced
+
+### Artifacts
+
+| Path | Size (bytes) |
+|------|-------------:|
+| `ext/rusefi/firmware/build/rusefi.elf` | 28263764 |
+| `ext/rusefi/firmware/build/rusefi.bin` | 580960 |
+| `ext/rusefi/firmware/build/rusefi.hex` | 1633991 |
+| `ext/rusefi/firmware/build/rusefi_crc32.bin` | 580960 |
+| `ext/rusefi/firmware/build/rusefi.srec` | 1742942 |
+
+Board-specific generated (outside demos): `generated/controllers/generated/*_powercore.h`, `generated/tunerstudio/generated/rusefi_powercore.ini`, `generated/tunerstudio/generated/signature_powercore.txt`.
+
+Log confirms: `SHORT_BOARD_NAME: powercore`, `FIRMWARE_ID="powercore"`, `PROJECT_CPU=ARCH_STM32F7`, flash0 used ~580960 B / 768 KB.

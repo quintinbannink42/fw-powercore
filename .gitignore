@@ -1,0 +1,22 @@
+# Build / IDE
+*.o
+*.d
+*.bin
+*.elf
+*.hex
+*.srec
+*.map
+*.list
+build/
+.idea/
+.vscode/
+*.user
+.DS_Store
+
+# rusEFI nested build noise if ever checked out incorrectly
+ext/rusefi/firmware/build/
+ext/rusefi/.gradle/
+ext/rusefi/**/build/
+
+# Large generated binaries (keep .ini sources if present under generated/)
+*.apk

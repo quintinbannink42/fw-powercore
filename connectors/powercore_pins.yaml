@@ -1,0 +1,141 @@
+#
+# PowerCore PDM — PinoutLogic-facing pin names (TunerStudio)
+# Product: PowerCore / PDM — not engine ECU fields.
+# Extended SuperSeal + trip params: drafts/
+# Meta H144_* symbols are NOT valid PinoutLogic ids — use PROTECTED_PIN / EFI_ADC / STM32 pins.
+#
+
+pins:
+  - id: PROTECTED_PIN_0
+    class: outputs
+    ts_name: HP1
+    function: High-power output 1 (25 A class)
+    type: hs
+
+  - id: PROTECTED_PIN_1
+    class: outputs
+    ts_name: HP2
+    function: High-power output 2
+    type: hs
+
+  - id: PROTECTED_PIN_2
+    class: outputs
+    ts_name: HP3
+    function: High-power output 3
+    type: hs
+
+  - id: PROTECTED_PIN_3
+    class: outputs
+    ts_name: HP4
+    function: High-power output 4
+    type: hs
+
+  - id: PROTECTED_PIN_4
+    class: outputs
+    ts_name: ADIO1
+    function: ADIO1 high-side enable (protected bank)
+    type: hs
+
+  - id: PROTECTED_PIN_5
+    class: outputs
+    ts_name: ADIO2
+    function: ADIO2 high-side enable (protected bank)
+    type: hs
+
+  - id: PROTECTED_PIN_6
+    class: outputs
+    ts_name: ADIO3
+    function: ADIO3 high-side enable (protected bank)
+    type: hs
+
+  - id: PROTECTED_PIN_7
+    class: outputs
+    ts_name: ADIO4
+    function: ADIO4 high-side enable (protected bank)
+    type: hs
+
+  # ADIO5-8 EN — STM32 pins per PINMAP (OUT_IO5..8)
+  - id: D2
+    class: outputs
+    ts_name: ADIO5
+    function: ADIO5 enable PD2 (SW protect TODO)
+    type: hs
+
+  - id: G11
+    class: outputs
+    ts_name: ADIO6
+    function: ADIO6 enable PG11 (SW protect TODO)
+    type: hs
+
+  - id: G3
+    class: outputs
+    ts_name: ADIO7
+    function: ADIO7 enable PG3 (SW protect TODO)
+    type: hs
+
+  - id: G4
+    class: outputs
+    ts_name: ADIO8
+    function: ADIO8 enable PG4 (SW protect TODO)
+    type: hs
+
+  - id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: VBATT
+    function: Battery / IGN_SW sense (11:1 divider) PA5
+    type: 12V
+
+  - id: EFI_ADC_8
+    class: analog_inputs
+    ts_name: HP1 Current
+    function: HP1 ISENSE IN_AUX1
+    type: av
+
+  - id: EFI_ADC_14
+    class: analog_inputs
+    ts_name: HP2 Current
+    function: HP2 ISENSE IN_AUX2
+    type: av
+
+  - id: EFI_ADC_7
+    class: analog_inputs
+    ts_name: HP3 Current
+    function: HP3 ISENSE IN_AUX3
+    type: av
+
+  - id: EFI_ADC_15
+    class: analog_inputs
+    ts_name: HP4 Current
+    function: HP4 ISENSE IN_AUX4
+    type: av
+
+  - id: EFI_ADC_10
+    class: analog_inputs
+    ts_name: ADIO1 Current
+    function: ADIO1 ISENSE MAP1
+    type: av
+
+  - id: EFI_ADC_11
+    class: analog_inputs
+    ts_name: ADIO2 Current
+    function: ADIO2 ISENSE MAP2
+    type: av
+
+  - id: EFI_ADC_2
+    class: analog_inputs
+    ts_name: ADIO3 Current
+    function: ADIO3 ISENSE MAP3
+    type: av
+
+  - id: EFI_ADC_0
+    class: analog_inputs
+    ts_name: ADIO4 Current
+    function: ADIO4 ISENSE O2S
+    type: av
+
+info:
+  title: PowerCore / PDM
+  name: Channel pins
+  directory: powercore
+  cid: pins
+  order: 0

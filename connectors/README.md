@@ -1,6 +1,6 @@
 # PowerCore connectors — drafts for PDM INI codegen
 
-**Status:** DRAFT (FW-0b). Not yet wired into rusEFI config generation.
+**Status:** DRAFT (FW-0b). PinoutLogic-facing YAML lives here; extended trip-param contract is under `drafts/`.
 
 These YAML files name PowerCore channels for a **PDM TunerStudio** environment (outputs, current sense, e-fuse trip params, CAN / system). They are **not** engine-ECU injector/ignition/crank fields.
 
@@ -8,13 +8,14 @@ These YAML files name PowerCore channels for a **PDM TunerStudio** environment (
 
 | File | Role |
 |------|------|
-| [`superseal26.yaml`](superseal26.yaml) | Physical AMP SuperSeal 1.0 26-way (Link “Connector C”) — rusEFI-style `pins` / `info` |
-| [`pdm_channels.yaml`](pdm_channels.yaml) | Logical PDM channel map: HP1–4, ADIO1–8 (EN / I / V / pull-up), system nets, **trip param placeholders** for INI |
+| [`powercore_pins.yaml`](powercore_pins.yaml) | Logical TS pin names (HP/ADIO/PROTECTED_PIN/current) — PinoutLogic input |
+| [`superseal26.yaml`](superseal26.yaml) | Physical AMP SuperSeal 1.0 26-way (Link “Connector C”) |
+| [`drafts/pdm_channels.yaml`](drafts/pdm_channels.yaml) | Extended channel map + **trip param placeholders** for INI (not PinoutLogic) |
 
 ## Schema notes
 
-- Physical connector YAML follows [rusEFI Connector Mapping](https://wiki.rusefi.com/Connector-Mapping/) (`pin`, `id`, `ts_name`, `class`, `function`, `type`, `info`).
-- `pdm_channels.yaml` extends that with a documented `pdm_meta` / `channels` / `trip_params` block for future INI codegen. Upstream codegen does **not** consume this yet — treat as the P0 contract for FW-INI.
+- Physical / pin YAML follows [rusEFI Connector Mapping](https://wiki.rusefi.com/Connector-Mapping/) (`pin`, `id`, `ts_name`, `class`, `function`, `type`, `info`).
+- `drafts/pdm_channels.yaml` adds `pdm_meta` / `channels` / `trip_params` for future INI codegen. Kept out of this directory root so PinoutLogic does not parse non-standard keys.
 - Authoritative pins: `/workspace/hellen-pdm-razor/PINMAP.md`, `CONNECTOR.md`, `HARDWARE_BOM.md`.
 - Product title in `info`: **PowerCore / PDM**.
 
@@ -22,4 +23,4 @@ These YAML files name PowerCore channels for a **PDM TunerStudio** environment (
 
 1. Research how `tdg-pdm8` / custom boards strip ECU INI pages (`MINIMAL_PINS`, board overrides).
 2. Map `trip_params` into TunerStudio fields on top of `protected_gpio`.
-3. Promote drafts → live `connectors/*.yaml` once rusEFI submodule is populated and codegen path is confirmed.
+3. Promote drafts → live INI once codegen path is confirmed.
