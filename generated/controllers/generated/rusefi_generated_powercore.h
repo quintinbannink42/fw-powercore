@@ -153,26 +153,20 @@
 #define BLOCKING_FACTOR 1024
 #define BOARD_ACTION_INJECTOR_PRESET 0x302
 #define BOARD_CAM_SETTINGS_FILE
-#define BOARD_CAN_BUS_FROM_FILE
-#define BOARD_CONFIG_FROM_FILE
 #define BOARD_CONSTANTS_EXTENSIONS_FROM_FILE
 #define BOARD_CONTROLLER_MENU_PREFIX_FROM_FILE
 #define BOARD_CONTROLLER_MENU_SUFFIX_FROM_FILE
 #define BOARD_CURVES_FROM_FILE
 #define BOARD_DIAG_PANEL1_FROM_FILE
 #define BOARD_DIAG_PANEL2_FROM_FILE
-#define BOARD_ENGINE_CONFIGURATION_FROM_FILE
 #define BOARD_ENGINE_METADATA_FILE
 #define BOARD_FRONT_PAGE_FROM_FILE
-#define BOARD_GAUGES_FROM_FILE
 #define BOARD_IGNITION_ADVANCE_MENU_FROM_FILE
 #define BOARD_IGNITION_SETTINGS_FROM_FILE
 #define BOARD_INDICATORS_FROM_FILE
 #define BOARD_INJECTION_SETTINGS_FROM_FILE
 #define BOARD_INJECTOR_SETTINGS_FROM_FILE
-#define BOARD_MENU_FROM_FILE
 #define BOARD_OPTIONS_FROM_FILE
-#define BOARD_PANELS_FROM_FILE
 #define BOARD_PC_VARIABLES_FROM_FILE
 #define BOARD_POPULAR_VEHICLES_FILE
 #define BOARD_PRIMING_PULSE_PANEL_FROM_FILE
@@ -462,7 +456,7 @@
 #define DEFAULT_SELT_STIM_RPM 1200
 #define DEFAULT_SELT_STIM_VVT0 23
 #define DEFAULT_SOLENOID_FREQUENCY 300
-#define DIALOG_NAME_VEHICLE_INFORMATION "Vehicle Information"
+#define DIALOG_NAME_VEHICLE_INFORMATION "PowerCore / PDM"
 #define DIGIPOT_COUNT 4
 #define DISPLACEMENT_DIGITS 3
 #define DISPLACEMENT_MAX 65
@@ -503,6 +497,7 @@
 #define DYNO_SAE_TEMPERATURE_C_UNITS "C"
 #define EFI_CAN_BUS_COUNT 2
 #define EFI_CAN_CANFD FALSE
+#define EFI_LTFT_CONTROL FALSE
 #define ego_sensor_e_auto_enum 0="ES_BPSX_D1",2="ES_14Point7_Free",6="ES_AEM",5="ES_Custom",1="ES_Innovate_MTX_L",4="ES_PLX"
 #define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "INVALID", "PLX", "Custom", "AEM"
 #define ego_sensor_e_ES_14Point7_Free 2
@@ -513,7 +508,7 @@
 #define ego_sensor_e_ES_PLX 4
 #define egoSettings_NAME "CAN O2 sensors"
 #define EGT_CHANNEL_COUNT 8
-#define engine_configuration_s_size 4272
+#define engine_configuration_s_size 4520
 #define engine_load_mode_e_auto_enum 0="LM_SPEED_DENSITY",2="LM_ALPHA_N",3="LM_LUA",1="LM_REAL_MAF",4="UNSUPPORTED_ENUM_VALUE"
 #define engine_load_mode_e_LM_ALPHA_N 2
 #define engine_load_mode_e_LM_LUA 3
@@ -641,7 +636,7 @@
 #define engine_type_e_VAG_5_CYL 77
 #define engine_type_e_VW_ABA 32
 #define engine_type_e_WASTEGATE_PROTEUS_TEST 96
-#define ENGINE_TYPES_DIALOG_NAME "Base Tunes"
+#define ENGINE_TYPES_DIALOG_NAME "PowerCore"
 #define engineSyncCam_enum "Intake First Bank", "Exhaust First Bank", "Intake Second Bank", "Exhaust Second Bank"
 #define ETB2_TRIM_RPM_SIZE 6
 #define ETB2_TRIM_SIZE 6
@@ -686,22 +681,22 @@
 #define GAUGE_LONG_NAME_AAT "Ambient Temperature"
 #define GAUGE_LONG_NAME_CLT "Coolant temp"
 #define GAUGE_LONG_NAME_IAT "Intake air temp"
-#define GAUGE_LUA_FROM_0 -30000
-#define GAUGE_LUA_FROM_1 -30000
-#define GAUGE_LUA_FROM_2 -30000
-#define GAUGE_LUA_FROM_3 -30000
-#define GAUGE_LUA_FROM_4 -30000
-#define GAUGE_LUA_FROM_5 -30000
-#define GAUGE_LUA_FROM_6 -30000
-#define GAUGE_LUA_FROM_7 -30000
-#define GAUGE_LUA_TO_0 30000
-#define GAUGE_LUA_TO_1 30000
-#define GAUGE_LUA_TO_2 30000
-#define GAUGE_LUA_TO_3 30000
-#define GAUGE_LUA_TO_4 30000
-#define GAUGE_LUA_TO_5 30000
-#define GAUGE_LUA_TO_6 30000
-#define GAUGE_LUA_TO_7 30000
+#define GAUGE_LUA_FROM_0 0
+#define GAUGE_LUA_FROM_1 0
+#define GAUGE_LUA_FROM_2 0
+#define GAUGE_LUA_FROM_3 0
+#define GAUGE_LUA_FROM_4 0
+#define GAUGE_LUA_FROM_5 0
+#define GAUGE_LUA_FROM_6 0
+#define GAUGE_LUA_FROM_7 0
+#define GAUGE_LUA_TO_0 20
+#define GAUGE_LUA_TO_1 20
+#define GAUGE_LUA_TO_2 20
+#define GAUGE_LUA_TO_3 20
+#define GAUGE_LUA_TO_4 20
+#define GAUGE_LUA_TO_5 20
+#define GAUGE_LUA_TO_6 20
+#define GAUGE_LUA_TO_7 20
 #define GAUGE_NAME_AC_PRESSURE "A/C pressure"
 #define GAUGE_NAME_ACCEL_LAT "Accel: Lateral"
 #define GAUGE_NAME_ACCEL_LON "Accel: Longitudinal"
@@ -821,14 +816,14 @@
 #define GAUGE_NAME_LAMBDA "Lambda"
 #define GAUGE_NAME_LAMBDA2 "Lambda 2"
 #define GAUGE_NAME_LAST_ERROR "Warning: last"
-#define GAUGE_NAME_LUA_0 "Lua Gauge 1"
-#define GAUGE_NAME_LUA_1 "Lua Gauge 2"
-#define GAUGE_NAME_LUA_2 "Lua Gauge 3"
-#define GAUGE_NAME_LUA_3 "Lua Gauge 4"
-#define GAUGE_NAME_LUA_4 "Lua Gauge 5"
-#define GAUGE_NAME_LUA_5 "Lua Gauge 6"
-#define GAUGE_NAME_LUA_6 "Lua Gauge 7"
-#define GAUGE_NAME_LUA_7 "Lua Gauge 8"
+#define GAUGE_NAME_LUA_0 "ADIO1 current (Lua)"
+#define GAUGE_NAME_LUA_1 "ADIO2 current (Lua)"
+#define GAUGE_NAME_LUA_2 "ADIO3 current (Lua)"
+#define GAUGE_NAME_LUA_3 "ADIO4 current (Lua)"
+#define GAUGE_NAME_LUA_4 "ADIO5 current (Lua)"
+#define GAUGE_NAME_LUA_5 "ADIO6 current (Lua)"
+#define GAUGE_NAME_LUA_6 "ADIO7 current (Lua)"
+#define GAUGE_NAME_LUA_7 "ADIO8 current (Lua)"
 #define GAUGE_NAME_MAF "MAF"
 #define GAUGE_NAME_MAP "MAP"
 #define GAUGE_NAME_OIL_PRESSURE "Oil Pressure"
@@ -1248,10 +1243,10 @@
 #define Gpio_TLE9104_5_OUT_2 343
 #define Gpio_TLE9104_5_OUT_3 344
 #define Gpio_Unassigned 0
-#define GPPWM_1_NAME "General Purpose PWM 1"
-#define GPPWM_2_NAME "General Purpose PWM 2"
-#define GPPWM_3_NAME "General Purpose PWM 3"
-#define GPPWM_4_NAME "General Purpose PWM 4"
+#define GPPWM_1_NAME "PDM PWM 1"
+#define GPPWM_2_NAME "PDM PWM 2"
+#define GPPWM_3_NAME "PDM PWM 3"
+#define GPPWM_4_NAME "PDM PWM 4"
 #define gppwm_channel_e_auto_enum 0="GPPWM_Zero",9="GPPWM_AccelPedal",16="GPPWM_AuxLinear1",17="GPPWM_AuxLinear2",29="GPPWM_AuxLinear3",30="GPPWM_AuxLinear4",7="GPPWM_AuxTemp1",8="GPPWM_AuxTemp2",26="GPPWM_BaroPressure",3="GPPWM_Clt",25="GPPWM_DetectedGear",27="GPPWM_Egt1",28="GPPWM_Egt2",15="GPPWM_EthanolPercent",5="GPPWM_FuelLoad",34="GPPWM_FuelPressure",18="GPPWM_GppwmOutput1",19="GPPWM_GppwmOutput2",20="GPPWM_GppwmOutput3",21="GPPWM_GppwmOutput4",4="GPPWM_Iat",6="GPPWM_IgnLoad",22="GPPWM_LuaGauge1",23="GPPWM_LuaGauge2",2="GPPWM_Map",32="GPPWM_OilPressure",33="GPPWM_OilTemp",24="GPPWM_Rpm",35="GPPWM_ThrottleRatio",1="GPPWM_Tps",12="GPPWM_VVT_1E",11="GPPWM_VVT_1I",14="GPPWM_VVT_2E",13="GPPWM_VVT_2I",10="GPPWM_Vbatt",31="GPPWM_VehicleSpeed"
 #define gppwm_channel_e_GPPWM_AccelPedal 9
 #define gppwm_channel_e_GPPWM_AuxLinear1 16
@@ -1422,7 +1417,7 @@
 #define load_override_e_enum "None", "MAP", "TPS", "Acc Pedal", "Cyl Filling %"
 #define LOG_DELIMITER "`"
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
-#define LTFT_PAGE_ENABLED true
+#define LTFT_PAGE_ENABLED false
 #define ltft_s_size 16
 #define LUA_ANALOG_INPUT_COUNT 8
 #define LUA_BUTTON_COUNT 10
@@ -1445,8 +1440,8 @@
 #define LUA_PWM_COUNT 8
 #define LUA_SCRIPT_SIZE 8000
 #define MAF_DECODING_COUNT 32
-#define MAIN_HELP_URL "https://rusefi.com/"
-#define MAIN_PAGE_GAUGES_FILE "tunerstudio/main_page_gauges.ini"
+#define MAIN_HELP_URL "https://github.com/quintinbannink42/fw-powercore"
+#define MAIN_PAGE_GAUGES_FILE "../../../board_front_gauges.ini"
 #define MAP_ANGLE_SIZE 8
 #define MAP_EST_LOAD_COUNT 16
 #define MAP_EST_RPM_COUNT 16
@@ -1523,12 +1518,14 @@
 #define PAGE_SIZE_3 2048
 #define PAGE_SIZE_4 1268
 #define PAGE_SIZE_5 8000
+#define PDM_CHANNEL_COUNT 12
+#define pdm_channel_trip_s_size 20
 #define PEDAL_TO_TPS_RPM_SIZE 8
 #define PEDAL_TO_TPS_SIZE 8
 #define pedalSensor_NAME "Accelerator pedal"
 #define pedalToTpsTbl_NAME "ETB pedal target"
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 16764
+#define persistent_config_s_size 17012
 #define pid_s_size 20
 #define pin_input_mode_e_auto_enum 0="PI_DEFAULT",4="PI_INVERTED_DEFAULT",6="PI_INVERTED_PULLDOWN",5="PI_INVERTED_PULLUP",2="PI_PULLDOWN",1="PI_PULLUP"
 #define pin_input_mode_e_PI_DEFAULT 0
@@ -1647,7 +1644,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3612762612
+#define SIGNATURE_HASH 383245344
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1720,7 +1717,7 @@
 #define TOOTH_PACKET_COUNT 1000
 #define TOOTH_PACKET_SIZE 2
 #define TOP_DEAD_CENTER_MESSAGE "r"
-#define TOP_LEVEL_MENU_FILE "tunerstudio/top_level_menu.ini"
+#define TOP_LEVEL_MENU_FILE "../../../board_top_level_menu.ini"
 #define TORQUE_CURVE_RPM_SIZE 6
 #define TORQUE_CURVE_SIZE 6
 #define TORQUE_TABLE_X_SIZE 6
@@ -1731,7 +1728,7 @@
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON 0
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH 2
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH 3
-#define TOTAL_CONFIG_SIZE 16764
+#define TOTAL_CONFIG_SIZE 17012
 #define TPS_2_BYTE_PACKING_MULT 100
 #define TPS_PPS_TOO_HIGH_THRESHOLD 110
 #define TPS_PPS_TOO_LOW_THRESHOLD -10
@@ -1997,14 +1994,14 @@
 #define TS_OUTPUT_ALL_COMMAND_char A
 #define TS_OUTPUT_COMMAND 'O'
 #define TS_OUTPUT_COMMAND_char O
-#define TS_PAGE_BURN_COMMANDS "B%2i", "", "", "B%2i", "B%2i"
-#define TS_PAGE_CHUNK_WRITE "C%2i%2o%2c%v", "C%2i%2o%2c%v", "C%2i%2o%2c%v", "C%2i%2o%2c%v", "C%2i%2o%2c%v"
-#define TS_PAGE_COUNT 5
-#define TS_PAGE_CRC_CHECK "k%2i%2o%2c", "k%2i%2o%2c", "k%2i%2o%2c", "k%2i%2o%2c", "k%2i%2o%2c"
-#define TS_PAGE_IDENTIFIERS "\x00\x00", "\x00\x01", "\x00\x02", "\x00\x03", "\x00\x04"
-#define TS_PAGE_READ_COMMANDS "R%2i%2o%2c", "R%2i%2o%2c", "R%2i%2o%2c", "R%2i%2o%2c", "R%2i%2o%2c"
-#define TS_PAGE_SIZES 16764, 256, 2048, 1268, 8000
-#define TS_PAGE_VALUE_WRITE "C%2i%2o%2c%v", "C%2i%2o%2c%v", "C%2i%2o%2c%v", "C%2i%2o%2c%v", "C%2i%2o%2c%v"
+#define TS_PAGE_BURN_COMMANDS "B%2i", "", "B%2i", "B%2i"
+#define TS_PAGE_CHUNK_WRITE "C%2i%2o%2c%v", "C%2i%2o%2c%v", "C%2i%2o%2c%v", "C%2i%2o%2c%v"
+#define TS_PAGE_COUNT 4
+#define TS_PAGE_CRC_CHECK "k%2i%2o%2c", "k%2i%2o%2c", "k%2i%2o%2c", "k%2i%2o%2c"
+#define TS_PAGE_IDENTIFIERS "\x00\x00", "\x00\x01", "\x00\x03", "\x00\x04"
+#define TS_PAGE_READ_COMMANDS "R%2i%2o%2c", "R%2i%2o%2c", "R%2i%2o%2c", "R%2i%2o%2c"
+#define TS_PAGE_SIZES 17012, 256, 1268, 8000
+#define TS_PAGE_VALUE_WRITE "C%2i%2o%2c%v", "C%2i%2o%2c%v", "C%2i%2o%2c%v", "C%2i%2o%2c%v"
 #define TS_PERF_TRACE_BEGIN '_'
 #define TS_PERF_TRACE_BEGIN_char _
 #define TS_PERF_TRACE_GET_BUFFER 'b'
@@ -2032,24 +2029,24 @@
 #define TS_SET_LOGGER_SWITCH 'l'
 #define TS_SET_LOGGER_SWITCH_char l
 #define ts_show_acr_pins true
-#define ts_show_adv_wall_wetting true
-#define ts_show_AdvanceCorrectionsForCranking true
-#define ts_show_air_conditioning true
-#define ts_show_alternator true
+#define ts_show_adv_wall_wetting false
+#define ts_show_AdvanceCorrectionsForCranking false
+#define ts_show_air_conditioning false
+#define ts_show_alternator false
 #define ts_show_analog_diag false
 #define ts_show_analog_divider false
-#define ts_show_analog_ego true
+#define ts_show_analog_ego false
 #define ts_show_analog_input_settings true
-#define ts_show_analog_o2 true
-#define ts_show_aux_connections true
+#define ts_show_analog_o2 false
+#define ts_show_aux_connections false
 #define ts_show_aux_sensors true
 #define ts_show_auxserial_pins true
 #define ts_show_bank2_cam1 true
 #define ts_show_bank2_cam2 true
-#define ts_show_baroSettings true
+#define ts_show_baroSettings false
 #define ts_show_basic_configurations false
 #define ts_show_bench_test true
-#define ts_show_brake_pedal_indicator true
+#define ts_show_brake_pedal_indicator false
 #define ts_show_brake_pedal_pin true
 #define ts_show_cam1 true
 #define ts_show_cam2 true
@@ -2061,22 +2058,22 @@
 #define ts_show_can_wbo_type true
 #define ts_show_can_weird true
 #define ts_show_canbus3 false
-#define ts_show_canbus_sniffer false
-#define ts_show_charge_estimation true
+#define ts_show_canbus_sniffer true
+#define ts_show_charge_estimation false
 #define ts_show_check_engine false
 #define ts_show_clt true
 #define ts_show_clt_iat_pullup true
-#define ts_show_clutch_down true
+#define ts_show_clutch_down false
 #define ts_show_clutch_down_pin true
-#define ts_show_clutch_up true
+#define ts_show_clutch_up false
 #define ts_show_clutch_up_pin true
 #define ts_show_communityCommsLedPin false
-#define ts_show_complexWallModel true
+#define ts_show_complexWallModel false
 #define ts_show_compression_ratio false
 #define ts_show_compressor_sensor true
 #define ts_show_console_settings true
-#define ts_show_cranking_rpm true
-#define ts_show_crankingTpsCurve true
+#define ts_show_cranking_rpm false
+#define ts_show_crankingTpsCurve false
 #define ts_show_cylinder_10 true
 #define ts_show_cylinder_11 true
 #define ts_show_cylinder_12 true
@@ -2091,42 +2088,43 @@
 #define ts_show_cylinder_bank true
 #define ts_show_cylinder_trim_1 true
 #define ts_show_cylinder_trim_2 true
-#define ts_show_dc_hardware true
+#define ts_show_dc_hardware false
 #define ts_show_debug_mode false
 #define ts_show_disable_etb false
-#define ts_show_ecu_stimulator true
-#define ts_show_ego2 true
+#define ts_show_ecu_stimulator false
+#define ts_show_ego2 false
 #define ts_show_egt false
 #define ts_show_enableKnockSpectrogram true
-#define ts_show_engine_code true
-#define ts_show_engine_make true
-#define ts_show_etb true
-#define ts_show_etb_bias_curve true
+#define ts_show_engine_code false
+#define ts_show_engine_control false
+#define ts_show_engine_make false
+#define ts_show_etb false
+#define ts_show_etb_bias_curve false
 #define ts_show_etb_extra_monitoring
-#define ts_show_etb_frequency true
+#define ts_show_etb_frequency false
 #define ts_show_etb_min_max true
 #define ts_show_etb_pid true
 #define ts_show_etb_pid_autotune true
 #define ts_show_etb_pins false
-#define ts_show_exhaust_vvt true
-#define ts_show_experimental true
-#define ts_show_fan2_settings true
-#define ts_show_fan_settings true
-#define ts_show_faster_spin_up true
-#define ts_show_final_ratio true
-#define ts_show_firing_order true
+#define ts_show_exhaust_vvt false
+#define ts_show_experimental false
+#define ts_show_fan2_settings false
+#define ts_show_fan_settings false
+#define ts_show_faster_spin_up false
+#define ts_show_final_ratio false
+#define ts_show_firing_order false
 #define ts_show_flex_inverted true
-#define ts_show_flood_clear true
+#define ts_show_flood_clear false
 #define ts_show_flow_units true
 #define ts_show_forced_induction false
 #define ts_show_ford_toyota_tps_pps true
 #define ts_show_FractionDivisor true
-#define ts_show_fuel_level_sensor true
-#define ts_show_fuel_pressure_sensor true
-#define ts_show_fuel_pump true
+#define ts_show_fuel_level_sensor false
+#define ts_show_fuel_pressure_sensor false
+#define ts_show_fuel_pump false
 #define ts_show_fuel_relay_pin true
-#define ts_show_fuel_strategy true
-#define ts_show_fuel_temp_sensor true
+#define ts_show_fuel_strategy false
+#define ts_show_fuel_temp_sensor false
 #define ts_show_fuel_threshold true
 #define ts_show_fuel_trim_cylinder_1 true
 #define ts_show_fuel_trim_cylinder_10 true
@@ -2142,7 +2140,7 @@
 #define ts_show_fuel_trim_cylinder_9 true
 #define ts_show_fuel_trims true
 #define ts_show_full_pinout true
-#define ts_show_gasoline_scale true
+#define ts_show_gasoline_scale false
 #define ts_show_gdi false
 #define ts_show_gdi_low_level true
 #define ts_show_globalTriggerAngleOffset true
@@ -2158,8 +2156,8 @@
 #define ts_show_gppwm_4 true
 #define ts_show_grab_tps true
 #define ts_show_hardware_simulator true
-#define ts_show_hbridge_function true
-#define ts_show_hd true
+#define ts_show_hbridge_function false
+#define ts_show_hd false
 #define ts_show_i2c false
 #define ts_show_i2c1_enable false
 #define ts_show_i2c1_pins false
@@ -2169,38 +2167,38 @@
 #define ts_show_i2c3_pins false
 #define ts_show_i2c4_enable false
 #define ts_show_i2c4_pins false
-#define ts_show_iat true
-#define ts_show_idle_hardware true
+#define ts_show_iat false
+#define ts_show_idle_hardware false
 #define ts_show_ign_key_analog_input false
-#define ts_show_ign_key_menu true
+#define ts_show_ign_key_menu false
 #define ts_show_ign_key_switch false
-#define ts_show_ignition true
-#define ts_show_ignitionMode true
-#define ts_show_ignitionOutputs true
+#define ts_show_ignition false
+#define ts_show_ignitionMode false
+#define ts_show_ignitionOutputs false
 #define ts_show_ignitionPinMode false
 #define ts_show_inj_diag false
-#define ts_show_injection true
-#define ts_show_injection_hardware true
-#define ts_show_injection_mode true
+#define ts_show_injection false
+#define ts_show_injection_hardware false
+#define ts_show_injection_mode false
 #define ts_show_injection_phase true
 #define ts_show_injectionPinMode false
 #define ts_show_InjectorFlowLinearizationTable false
-#define ts_show_injTest true
+#define ts_show_injTest false
 #define ts_show_intake_cam_edge true
 #define ts_show_intake_vvt_direction true
 #define ts_show_jam_detection true
 #define ts_show_k_line false
-#define ts_show_knock_cylinder_mapping true
+#define ts_show_knock_cylinder_mapping false
 #define ts_show_l9779 false
-#define ts_show_linear_thermistors true
+#define ts_show_linear_thermistors false
 #define ts_show_live_data true
 #define ts_show_long_term_fuel_trim false
-#define ts_show_ltft_sd_card_message true
-#define ts_show_maf true
+#define ts_show_ltft_sd_card_message false
+#define ts_show_maf false
 #define ts_show_main_relay false
 #define ts_show_main_relay_microRusEFI_message false
-#define ts_show_map_averaging_enabled true
-#define ts_show_map_estimate true
+#define ts_show_map_averaging_enabled false
+#define ts_show_map_estimate false
 #define ts_show_mapMinBufferLength true
 #define ts_show_mc33810 false
 #define ts_show_mc33810_cs false
@@ -2208,20 +2206,20 @@
 #define ts_show_multispark true
 #define ts_show_number_of_cylinders true
 #define ts_show_odd_fire true
-#define ts_show_oil_pressure_sensor true
-#define ts_show_oil_sensors true
-#define ts_show_oil_temp_sensor true
+#define ts_show_oil_pressure_sensor false
+#define ts_show_oil_sensors false
+#define ts_show_oil_temp_sensor false
 #define ts_show_onboard_accelerometer false
 #define ts_show_output_diag false
-#define ts_show_popular_vehicles true
+#define ts_show_popular_vehicles false
 #define ts_show_primary_trigger true
 #define ts_show_reboot_to_dfu true
 #define ts_show_reset_calibrations true
-#define ts_show_rotary true
-#define ts_show_sd_card true
+#define ts_show_rotary false
+#define ts_show_sd_card false
 #define ts_show_sd_pins true
-#define ts_show_second_bank true
-#define ts_show_sent true
+#define ts_show_second_bank false
+#define ts_show_sent false
 #define ts_show_software_knock false
 #define ts_show_sparkHardwareLatencyCorrection true
 #define ts_show_speedo_settings true
@@ -2246,52 +2244,52 @@
 #define ts_show_status_leds true
 #define ts_show_stepper_hbridge true
 #define ts_show_stepper_push_pull false
-#define ts_show_strokes true
+#define ts_show_strokes false
 #define ts_show_sync_cam true
 #define ts_show_tachometer true
 #define ts_show_tcu false
 #define ts_show_throttle_switch true
 #define ts_show_tle8888 false
 #define ts_show_top_level_can_menu true
-#define ts_show_torque_model true
-#define ts_show_tps2 true
+#define ts_show_torque_model false
+#define ts_show_tps2 false
 #define ts_show_tps_sent false
-#define ts_show_traction_control true
-#define ts_show_trigger_advanced true
+#define ts_show_traction_control false
+#define ts_show_trigger_advanced false
 #define ts_show_trigger_console true
 #define ts_show_trigger_gap_override_flag true
-#define ts_show_trigger_overrides true
+#define ts_show_trigger_overrides false
 #define ts_show_trigger_pins true
 #define ts_show_tsp_pps_limits true
 #define ts_show_tunerstudio_port true
-#define ts_show_turbo_sensors true
-#define ts_show_twoWireBatchIgnition true
+#define ts_show_turbo_sensors false
+#define ts_show_twoWireBatchIgnition false
 #define ts_show_update_wbo_2023_to_2026 true
-#define ts_show_useNoiselessTriggerDecoder true
-#define ts_show_useRunningMathForCranking true
-#define ts_show_useSeparateVeForIdle true
+#define ts_show_useNoiselessTriggerDecoder false
+#define ts_show_useRunningMathForCranking false
+#define ts_show_useSeparateVeForIdle false
 #define ts_show_vbatt true
 #define ts_show_ve_blend true
-#define ts_show_ve_table_map true
+#define ts_show_ve_table_map false
 #define ts_show_veBlends2 true
 #define ts_show_veBlends3 true
 #define ts_show_veBlends4 true
 #define ts_show_vehicle_name true
-#define ts_show_vehicle_speed_sensor true
+#define ts_show_vehicle_speed_sensor false
 #define ts_show_virtual_dyno false
 #define ts_show_vr_threshold_2 false
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
-#define ts_show_vvl_control true
-#define ts_show_vvt_output true
+#define ts_show_vvl_control false
+#define ts_show_vvt_output false
 #define ts_show_vvt_output_pin true
-#define ts_show_wall_wetting true
+#define ts_show_wall_wetting false
 #define ts_show_wastegate_sensor true
-#define ts_show_wbo_can_menu true
+#define ts_show_wbo_can_menu false
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.09.21.powercore.3612762612"
+#define TS_SIGNATURE "rusEFI cursor/pdm-tunerstudio-ini-b139.2026.09.21.powercore.383245344"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

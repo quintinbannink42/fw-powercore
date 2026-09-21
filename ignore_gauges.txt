@@ -1,0 +1,22 @@
+*@Fuel: math
+*@Timing
+*@Boost Control
+*@Sync
+*@ETB more
+*@Ignition
+*@Fueling
+*@Acceleration Enrichment
+*@Idle
+*@Etb PID
+*@Boost PID
+*@Alternator PID
+*@GDI
+*@VVT
+*@Knock
+*@Torque
+*@Throttle Body (incl. ETB)
+*@Transmission
+*@DynoView
+*@Trigger
+*@Sensors - EGT
+*@Sensors - O2

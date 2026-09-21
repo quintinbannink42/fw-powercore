@@ -31,11 +31,10 @@ No invented pins. KiCad / copper (`pdmrazora`) untouched. Not waiting on Jeoff f
 - **No parallel protection layer.** E-fuse SM builds on `protected_gpio` / `tdg-pdm8` patterns only.
 - Do not touch `/workspace/hellen-pdm-razor` KiCad or HELLCORE.
 
-## Next: FW-INI spike (do not expand here)
+## Next (after FW-INI)
 
-1. INI strip research (`tdg-pdm8`, `MINIMAL_PINS`, board overrides) → PDM-only TunerStudio pages.
-2. E-fuse SM on `protected_gpio` — expose per-channel inrush limit, inrush window, OC limit, trip time, retry/latch (fields already stubbed in `connectors/pdm_channels.yaml`).
-3. CAN consume signal list (rusEFI ECU broadcast → pump/fan/output logic).
+1. E-fuse SM on `protected_gpio` — consume per-channel inrush / OC / retry / latch from `pdmChannelTrip[]` (TS placeholders landed).
+2. CAN consume signal list (rusEFI ECU broadcast → pump/fan/output logic). See `pdmCan*` fields.
 
 ## Compile / submodule status
 
@@ -68,3 +67,19 @@ See bottom of this file after compile attempt (updated in-pass).
 Board-specific generated (outside demos): `generated/controllers/generated/*_powercore.h`, `generated/tunerstudio/generated/rusefi_powercore.ini`, `generated/tunerstudio/generated/signature_powercore.txt`.
 
 Log confirms: `SHORT_BOARD_NAME: powercore`, `FIRMWARE_ID="powercore"`, `PROJECT_CPU=ARCH_STM32F7`, flash0 used ~580960 B / 768 KB.
+
+## FW-INI spike — 2026-09-21
+
+PDM-shaped TunerStudio: replaced Fuel/Ignition/Cranking top-level menus, added HP/ADIO trip + CAN consume UI hooks, dropped LTFT page. See [`TUNERSTUDIO_PDM.md`](TUNERSTUDIO_PDM.md). Identity still `powercore`.
+
+## Compile result — 2026-09-21 (this INI PR)
+
+**PASS** — `./compile_firmware.sh` on cloud VM with rusEFI `provide_gcc.sh` ARM GNU 14.2. Identity stayed `powercore`.
+
+- **Exit code:** 0
+- **INI:** `generated/tunerstudio/generated/rusefi_powercore.ini` (~12.7k lines)
+  - Top-level menus: Setup, **PowerCore**, Sensors, CAN-bus, Controller (no Fuel / Ignition / Cranking / Idle / Advanced)
+  - `nPages = 4` (LTFT page `0x0200` dropped via `EFI_LTFT_CONTROL FALSE`)
+  - Signature contains `powercore`
+- **Bin:** `ext/rusefi/firmware/build/rusefi.bin` 574952 B; flash0 ~73% of 768 KB
+- VM extras needed for this environment (not board files): `p7zip-full`, `dosfstools`, `bc`

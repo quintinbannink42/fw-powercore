@@ -1,0 +1,4 @@
+! PowerCore does not add persistent_config_s (outer) fields here.
+! PDM trip + CAN consume storage lives in board_engine_configuration.txt
+! (spliced into engine_configuration_s, accessed as engineConfiguration->…).
+! This file is kept so rusefi_config.mk CONFIG_INPUTS still tracks a board_config.txt.
