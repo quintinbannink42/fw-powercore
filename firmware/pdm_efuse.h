@@ -15,3 +15,6 @@ void pdmEfuse_check();
 float pdmEfuse_getCurrentA(size_t channel);
 PdmEfuseState pdmEfuse_getState(size_t channel);
 PdmEfuseTripReason pdmEfuse_getReason(size_t channel);
+bool pdmEfuse_isRequestedOn(size_t channel);
+bool pdmEfuse_isDriven(size_t channel);
+bool pdmEfuse_isFaulted(size_t channel);

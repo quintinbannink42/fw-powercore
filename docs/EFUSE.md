@@ -55,15 +55,17 @@ Host tests (no toolchain): `firmware/run_pdm_efuse_sm_test.sh`.
 - ADIO1-8 current: firmware writes `outputChannels.luaGauges[0-7]`. ADIO6-8
   read **0 A** until RES pins are `EFI_ADC`.
 
-## What is left (CAN consume)
+CAN status TX publishes the same currents plus commanded/actual/fault bits
+(see [`CAN.md`](CAN.md)).
 
-`pdmCanConsumeEnable` / `pdmCanConsumeBaseId` / `pdmCanStatusEnable` /
-`pdmCanStatusBaseId` are still **UI + storage only**. Next workstream:
+## CAN consume
 
-1. Consume rusEFI ECU broadcast at `pdmCanConsumeBaseId` (pump / fan / output
-   logic → these protected pins).
-2. Publish per-channel current, commanded state, and fault bits at
-   `pdmCanStatusBaseId` (DBC).
-3. Optional: ADC3 analog for ADIO6-8 RES1-3 so software OC matches ADIO1-5.
-4. Over-temp staged shutdown (Razor has a per-pin temperature limit; no TS
+Landed. See [`CAN.md`](CAN.md). `pdmCanConsumeEnable` / `pdmCanConsumeBaseId`
+ingest rusEFI ECU verbose frames; `pdmCanStatusEnable` / `pdmCanStatusBaseId`
+publish DBC frames. Pump/fan examples drive HP1–3 through this e-fuse chip.
+
+## What is left
+
+1. Optional: ADC3 analog for ADIO6-8 RES1-3 so software OC matches ADIO1-5.
+2. Over-temp staged shutdown (Razor has a per-pin temperature limit; no TS
    field yet).

@@ -21,7 +21,7 @@ These YAML files name PowerCore channels for a **PDM TunerStudio** environment (
 
 ## Remaining firmware
 
-See [`docs/TUNERSTUDIO_PDM.md`](../docs/TUNERSTUDIO_PDM.md) and [`docs/EFUSE.md`](../docs/EFUSE.md). Remaining:
+See [`docs/TUNERSTUDIO_PDM.md`](../docs/TUNERSTUDIO_PDM.md), [`docs/EFUSE.md`](../docs/EFUSE.md),
+and [`docs/CAN.md`](../docs/CAN.md). Remaining:
 
-1. CAN consume signal list (rusEFI ECU broadcast → pump/fan/output logic).
-2. ADC3 analog for ADIO6-8 RES ISENSE.
+1. ADC3 analog for ADIO6-8 RES ISENSE.

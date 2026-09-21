@@ -80,17 +80,12 @@ Still open on the protection path:
 
 - ADIO6–8 software OC needs ADC3 analog (`H144_IN_RES1-3` are not `EFI_ADC`).
 - Over-temp staged shutdown (no TS field).
-- Per-channel fault bits on CAN status TX (below).
 
-## Out of scope (do not treat as done)
+## CAN consume
 
-### CAN consume
-
-`pdmCanConsumeEnable` / base IDs are UI + storage only. Not wired to rusEFI ECU
-broadcast → pump/fan/output logic, and there is no status DBC yet.
-
-Next workstream: consume ECU frames at `pdmCanConsumeBaseId`, drive Lua/GPPWM
-outputs, publish faults at `pdmCanStatusBaseId`.
+Landed. `pdmCanConsumeEnable` / base IDs drive HP1 (pump), HP2 (fan), HP3
+(fan2), ADIO1 (O2 heater), ADIO5 (main relay) from rusEFI ECU verbose CAN.
+Status DBC: `firmware/powercore_pdm.dbc`. How to point at an ECU: [`CAN.md`](CAN.md).
 
 ## Leftover ECU chrome
 

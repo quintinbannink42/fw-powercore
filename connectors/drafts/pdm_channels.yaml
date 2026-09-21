@@ -19,6 +19,7 @@ pdm_meta:
     E-fuse state machine ON TOP OF protected_gpio / tdg-pdm8 patterns.
     Do not invent a parallel protection layer. Bank: HP1-4 + ADIO1-8
     (PROTECTED_PIN_0..11). ADIO6-8 SW OC waits on ADC3 analog.
+    CAN consume maps rusEFI ECU verbose pump/fan bits onto HP1-3.
     AmpsPerVolt cal blocked on first silicon (BOM starters 19.3 / 4.26).
 
 # Shared TunerStudio field stubs for every protected output (INI codegen)
@@ -230,7 +231,7 @@ system:
   - name: CAN
     tx: H144_CAN_TX
     rx: H144_CAN_RX
-    function: On-module CAN transceiver; consume rusEFI ECU telemetry (FW-CAN)
+    function: On-module CAN transceiver; consume rusEFI ECU verbose + publish PDM status (docs/CAN.md)
     superseal_pins: [3, 10]
 
   - name: PWR_EN

@@ -1,0 +1,165 @@
+VERSION ""
+
+
+NS_ :
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+
+BS_:
+
+BU_: ECU PDM
+
+BO_ 512 BASE0: 8 ECU
+ SG_ WarningCounter : 0|16@1+ (1,0) [0|65535] "" PDM
+ SG_ LastError : 16|16@1+ (1,0) [0|65535] "" PDM
+ SG_ RevLimAct : 32|1@1+ (1,0) [0|1] "" PDM
+ SG_ MainRelayAct : 33|1@1+ (1,0) [0|1] "" PDM
+ SG_ FuelPumpAct : 34|1@1+ (1,0) [0|1] "" PDM
+ SG_ CELAct : 35|1@1+ (1,0) [0|1] "" PDM
+ SG_ EGOHeatAct : 36|1@1+ (1,0) [0|1] "" PDM
+ SG_ LambdaProtectAct : 37|1@1+ (1,0) [0|1] "" PDM
+ SG_ Fan : 38|1@1+ (1,0) [0|1] "" PDM
+ SG_ Fan2 : 39|1@1+ (1,0) [0|1] "" PDM
+ SG_ CurrentGear : 40|8@1+ (1,0) [0|15] "" PDM
+ SG_ DistanceTraveled : 48|16@1+ (0.1,0) [0|6553.5] "km" PDM
+
+BO_ 513 BASE1: 8 ECU
+ SG_ RPM : 0|16@1+ (1,0) [0|20000] "RPM" PDM
+ SG_ IgnitionTiming : 16|16@1- (0.02,0) [-360|360] "deg" PDM
+ SG_ InjDuty : 32|8@1+ (0.5,0) [0|100] "%" PDM
+ SG_ IgnDuty : 40|8@1+ (0.5,0) [0|100] "%" PDM
+ SG_ VehicleSpeed : 48|8@1+ (1,0) [0|255] "kph" PDM
+ SG_ FlexPct : 56|8@1+ (1,0) [0|100] "%" PDM
+
+BO_ 515 BASE3: 8 ECU
+ SG_ MAP : 0|16@1+ (0.03333333,0) [0|500] "kPa" PDM
+ SG_ CoolantTemp : 16|8@1+ (1,-40) [-40|215] "deg C" PDM
+ SG_ IntakeTemp : 24|8@1+ (1,-40) [-40|215] "deg C" PDM
+ SG_ AUX1Temp : 32|8@1+ (1,-40) [-40|215] "deg C" PDM
+ SG_ AUX2Temp : 40|8@1+ (1,-40) [-40|215] "deg C" PDM
+ SG_ MCUTemp : 48|8@1+ (1,-40) [-40|215] "deg C" PDM
+ SG_ FuelLevel : 56|8@1+ (0.5,0) [0|100] "%" PDM
+
+BO_ 576 PDM_STATUS0: 8 PDM
+ SG_ CmdHP1 : 0|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ CmdHP2 : 1|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ CmdHP3 : 2|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ CmdHP4 : 3|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ CmdADIO1 : 4|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ CmdADIO2 : 5|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ CmdADIO3 : 6|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ CmdADIO4 : 7|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ CmdADIO5 : 8|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ CmdADIO6 : 9|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ CmdADIO7 : 10|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ CmdADIO8 : 11|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ ActHP1 : 16|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ ActHP2 : 17|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ ActHP3 : 18|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ ActHP4 : 19|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ ActADIO1 : 20|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ ActADIO2 : 21|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ ActADIO3 : 22|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ ActADIO4 : 23|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ ActADIO5 : 24|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ ActADIO6 : 25|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ ActADIO7 : 26|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ ActADIO8 : 27|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FaultHP1 : 32|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FaultHP2 : 33|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FaultHP3 : 34|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FaultHP4 : 35|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FaultADIO1 : 36|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FaultADIO2 : 37|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FaultADIO3 : 38|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FaultADIO4 : 39|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FaultADIO5 : 40|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FaultADIO6 : 41|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FaultADIO7 : 42|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FaultADIO8 : 43|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ EcuAlive : 48|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ ConsumeEn : 49|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ StatusEn : 50|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ TimeoutFailsafe : 51|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ TxSeq : 56|8@1+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 577 PDM_CURR_HP: 8 PDM
+ SG_ HP1_A : 0|16@1+ (0.01,0) [0|200] "A" Vector__XXX
+ SG_ HP2_A : 16|16@1+ (0.01,0) [0|200] "A" Vector__XXX
+ SG_ HP3_A : 32|16@1+ (0.01,0) [0|200] "A" Vector__XXX
+ SG_ HP4_A : 48|16@1+ (0.01,0) [0|200] "A" Vector__XXX
+
+BO_ 578 PDM_CURR_ADIO14: 8 PDM
+ SG_ ADIO1_A : 0|16@1+ (0.01,0) [0|50] "A" Vector__XXX
+ SG_ ADIO2_A : 16|16@1+ (0.01,0) [0|50] "A" Vector__XXX
+ SG_ ADIO3_A : 32|16@1+ (0.01,0) [0|50] "A" Vector__XXX
+ SG_ ADIO4_A : 48|16@1+ (0.01,0) [0|50] "A" Vector__XXX
+
+BO_ 579 PDM_CURR_ADIO58: 8 PDM
+ SG_ ADIO5_A : 0|16@1+ (0.01,0) [0|50] "A" Vector__XXX
+ SG_ ADIO6_A : 16|16@1+ (0.01,0) [0|50] "A" Vector__XXX
+ SG_ ADIO7_A : 32|16@1+ (0.01,0) [0|50] "A" Vector__XXX
+ SG_ ADIO8_A : 48|16@1+ (0.01,0) [0|50] "A" Vector__XXX
+
+BO_ 580 PDM_REASONS: 8 PDM
+ SG_ TripHP1 : 0|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ TripHP2 : 4|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ TripHP3 : 8|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ TripHP4 : 12|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ TripADIO1 : 16|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ TripADIO2 : 20|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ TripADIO3 : 24|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ TripADIO4 : 28|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ TripADIO5 : 32|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ TripADIO6 : 36|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ TripADIO7 : 40|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ TripADIO8 : 44|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ EcuRpm : 48|16@1+ (1,0) [0|20000] "RPM" Vector__XXX
+
+CM_ SG_ 512 FuelPumpAct "ECU fuel pump output. PowerCore maps this to HP1.";
+CM_ SG_ 512 Fan "ECU fan 1. PowerCore maps this to HP2.";
+CM_ SG_ 512 Fan2 "ECU fan 2. PowerCore maps this to HP3.";
+CM_ SG_ 512 EGOHeatAct "ECU O2 heater. PowerCore maps this to ADIO1.";
+CM_ SG_ 512 MainRelayAct "ECU main relay. PowerCore maps this to ADIO5.";
+CM_ BO_ 576 "PDM commanded / actual / fault bits + ECU timeout flags. ID = pdmCanStatusBaseId.";
+CM_ BO_ 577 "HP1-4 current, 0.01 A/bit.";
+CM_ BO_ 578 "ADIO1-4 current, 0.01 A/bit.";
+CM_ BO_ 579 "ADIO5-8 current, 0.01 A/bit. ADIO6-8 read 0 A until ADC3 analog.";
+CM_ BO_ 580 "Per-channel e-fuse trip reason (0 none, 1 fast short, 2 overcurrent, 3 sense fail) plus last ECU RPM.";
+VAL_ 580 TripHP1 0 "None" 1 "FastShort" 2 "Overcurrent" 3 "SenseFail";
+VAL_ 580 TripHP2 0 "None" 1 "FastShort" 2 "Overcurrent" 3 "SenseFail";
+VAL_ 580 TripHP3 0 "None" 1 "FastShort" 2 "Overcurrent" 3 "SenseFail";
+VAL_ 580 TripHP4 0 "None" 1 "FastShort" 2 "Overcurrent" 3 "SenseFail";
+VAL_ 580 TripADIO1 0 "None" 1 "FastShort" 2 "Overcurrent" 3 "SenseFail";
+VAL_ 580 TripADIO2 0 "None" 1 "FastShort" 2 "Overcurrent" 3 "SenseFail";
+VAL_ 580 TripADIO3 0 "None" 1 "FastShort" 2 "Overcurrent" 3 "SenseFail";
+VAL_ 580 TripADIO4 0 "None" 1 "FastShort" 2 "Overcurrent" 3 "SenseFail";
+VAL_ 580 TripADIO5 0 "None" 1 "FastShort" 2 "Overcurrent" 3 "SenseFail";
+VAL_ 580 TripADIO6 0 "None" 1 "FastShort" 2 "Overcurrent" 3 "SenseFail";
+VAL_ 580 TripADIO7 0 "None" 1 "FastShort" 2 "Overcurrent" 3 "SenseFail";
+VAL_ 580 TripADIO8 0 "None" 1 "FastShort" 2 "Overcurrent" 3 "SenseFail";
