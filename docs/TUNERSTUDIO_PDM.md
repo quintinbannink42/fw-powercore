@@ -17,11 +17,11 @@ rusEFI builds the INI from:
 | `ext/rusefi/firmware/integration/rusefi_config.txt` | Persistent config layout |
 | `prepend.txt` | Board `#define`s (first writer wins) |
 | `connectors/*.yaml` | Pin drop-down names |
-| `board_*.ini` / `board_config.txt` | Board UI + extra config fields |
+| `board_*.ini` / `board_engine_configuration.txt` | Board UI + extra `engineConfiguration` fields |
 
 `tdg-pdm8` uses `MINIMAL_PINS` + `protected_gpio` but ships an **empty**
 `prepend.txt`, so its INI is still a full ECU. PowerCore follows
-`hellen/small-can-board` (`ts_show_engine_control`, `LTFT_PAGE_ENABLED false`)
+`hellen/small-can-board` (`ts_show_engine_control`, `EFI_LTFT_CONTROL FALSE`)
 and additionally **replaces** `TOP_LEVEL_MENU_FILE` with PDM menus.
 
 ## How to regenerate the INI
@@ -47,16 +47,24 @@ Paths in `prepend.txt` (`TOP_LEVEL_MENU_FILE`, `MAIN_PAGE_GAUGES_FILE`) are
 relative to `ext/rusefi/firmware` (`BOARD_DIR=../../..`). Keep the overlay
 layout (`compile_firmware.sh` + `meta-info.env` at repo root).
 
+`board_engine_configuration.txt` is **not** listed in rusEFI
+`rusefi_config.mk` `CONFIG_INPUTS`. A clean `./compile_firmware.sh` always
+regenerates. After editing that file on an incremental tree, `touch prepend.txt`
+(or delete `ext/rusefi/firmware/.config-sentinel`) so gen_config re-runs.
+
 ## What this pass changes
 
 - **Hides** Fuel / Ignition / Cranking / Idle / Advanced engine menus by
   swapping `tunerstudio/top_level_menu.ini` for `board_top_level_menu.ini`.
 - **Adds** PowerCore pages: HP1–4, ADIO1–8, ADIO trip placeholders, faults,
   CAN consume/status hooks, Lua PWM outputs, current-sense analog mapping.
-- **Adds** persistent `pdmChannelTrip[12]` + CAN ID fields via `board_config.txt`.
+- **Adds** persistent `pdmChannelTrip[12]` + CAN ID fields via
+  `board_engine_configuration.txt` (spliced into `engine_configuration_s`, not
+  `board_config.txt` which lands on the outer `persistent_config_s`).
 - **Front page gauges:** VBATT, HP1–4 current (aux linear), ADIO1–2 Lua
   placeholders, CAN RX counter.
-- **Drops LTFT page** (`LTFT_PAGE_ENABLED false` + `EFI_LTFT_CONTROL=FALSE`).
+- **Drops LTFT page** (`#define EFI_LTFT_CONTROL FALSE` in `prepend.txt`; Makefile
+  lifts it into DDEFS; generator publishes `LTFT_PAGE_ENABLED false`).
 - **Defaults** `isInjectionEnabled` / `isIgnitionEnabled` false.
 
 ## Out of scope (do not treat as done)
@@ -90,7 +98,8 @@ outputs, publish faults at `pdmCanStatusBaseId`.
 
 The shared template still has **Setup** entries (Trigger, Limits and
 protection) that have no board-level hide flag. They are not Fuel/Ignition
-tables. Full pinout + bench test stay on for bring-up.
+tables. Full pinout + bench test stay on for bring-up. Vehicle Information is
+titled **PowerCore / PDM**.
 
 Live-data **View** still lists engine fragments (fuel_computer, …) because that
 menu is generated from firmware live-data modules. `ignore_gauges.txt` strips

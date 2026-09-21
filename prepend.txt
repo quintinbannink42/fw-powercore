@@ -15,10 +15,11 @@
 #define TOP_LEVEL_MENU_FILE "../../../board_top_level_menu.ini"
 #define MAIN_PAGE_GAUGES_FILE "../../../board_front_gauges.ini"
 
-! Drop LTFT TunerStudio page. Must match EFI_LTFT_CONTROL=FALSE in board.mk.
-#define LTFT_PAGE_ENABLED false
+! Drop LTFT TunerStudio page. Makefile lifts EFI_LTFT_CONTROL into DDEFS
+! (do not set it in board.mk). TSProjectConsumer publishes LTFT_PAGE_ENABLED.
+#define EFI_LTFT_CONTROL FALSE
 
-! Channel trip array length (board_config.txt)
+! Channel trip array length (board_engine_configuration.txt)
 #define PDM_CHANNEL_COUNT 12
 
 ! Lua gauges labeled as ADIO current placeholders (e-fuse SM / Lua later)

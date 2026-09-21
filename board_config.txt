@@ -1,19 +1,4 @@
-! PowerCore PDM persistent fields (appended to engine_configuration_s)
-! Placeholders until the e-fuse state machine consumes them.
-! Channel order: 1-4 HP1-HP4, 5-12 ADIO1-ADIO8.
-
-struct pdm_channel_trip_s
-	float inrushLimitA;Inrush current limit. Placeholder until e-fuse SM reads this.;"A", 1, 0, 0, 200, 1
-	float ocLimitA;Continuous overcurrent / trip limit. Placeholder until e-fuse SM reads this.;"A", 1, 0, 0, 200, 1
-	uint16_t inrushWindowMs;Inrush window. Placeholder until e-fuse SM.;"ms", 1, 0, 0, 10000, 0
-	uint16_t tripTimeMs;Overcurrent trip time. Placeholder until e-fuse SM.;"ms", 1, 0, 0, 10000, 0
-	uint8_t retryCount;Retries before latch. Placeholder until e-fuse SM.;"", 1, 0, 0, 20, 0
-	bit latchOnFault,"yes","no"
-end_struct
-
-pdm_channel_trip_s[PDM_CHANNEL_COUNT iterate] pdmChannelTrip
-
-bit pdmCanConsumeEnable,"enabled","disabled"
-bit pdmCanStatusEnable,"enabled","disabled"
-uint16_t pdmCanConsumeBaseId;rusEFI ECU broadcast base ID to consume (pump/fan/output logic).;"id", 1, 0, 0, 2047, 0
-uint16_t pdmCanStatusBaseId;PowerCore status / fault TX base ID.;"id", 1, 0, 0, 2047, 0
+! PowerCore does not add persistent_config_s (outer) fields here.
+! PDM trip + CAN consume storage lives in board_engine_configuration.txt
+! (spliced into engine_configuration_s, accessed as engineConfiguration->…).
+! This file is kept so rusefi_config.mk CONFIG_INPUTS still tracks a board_config.txt.
