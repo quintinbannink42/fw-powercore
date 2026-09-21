@@ -19,8 +19,9 @@ These YAML files name PowerCore channels for a **PDM TunerStudio** environment (
 - Authoritative pins: `/workspace/hellen-pdm-razor/PINMAP.md`, `CONNECTOR.md`, `HARDWARE_BOM.md`.
 - Product title in `info`: **PowerCore / PDM**.
 
-## Next (FW-INI spike)
+## Next (after this INI pass)
 
-1. Research how `tdg-pdm8` / custom boards strip ECU INI pages (`MINIMAL_PINS`, board overrides).
-2. Map `trip_params` into TunerStudio fields on top of `protected_gpio`.
-3. Promote drafts → live INI once codegen path is confirmed.
+See [`docs/TUNERSTUDIO_PDM.md`](../docs/TUNERSTUDIO_PDM.md). Remaining firmware:
+
+1. E-fuse SM on `protected_gpio` consuming `pdmChannelTrip[]`.
+2. CAN consume signal list (rusEFI ECU broadcast → pump/fan/output logic).

@@ -1,12 +1,170 @@
-! PowerCore standalone PDM — board-specific TunerStudio / config hooks
-! Former stub name: hellen-pdm-razor
-! PDM environment (not ECU): hide engine-centric pages where possible; FW-INI spike next
+! PowerCore standalone PDM — TunerStudio / config hooks
+! Product: PowerCore (not an engine ECU). Former stub name: hellen-pdm-razor
+!
+! prepend.txt is parsed first; #define values here win over rusefi_config.txt
+! defaults (VariableRegistry does not redefine). See docs/TUNERSTUDIO_PDM.md.
 
-#define MAIN_HELP_URL "https://rusefi.com/"
+#define MAIN_HELP_URL "https://github.com/quintinbannink42/fw-powercore"
 
-! Prefer showing output / aux / CAN over engine tables for bring-up
+! Identity shown in TunerStudio
+#define DIALOG_NAME_VEHICLE_INFORMATION "PowerCore / PDM"
+#define ENGINE_TYPES_DIALOG_NAME "PowerCore"
+
+! Replace Fuel / Ignition / Cranking / Idle / Advanced with PDM menus.
+! Path is relative to ext/rusefi/firmware (BOARD_DIR=../../..).
+#define TOP_LEVEL_MENU_FILE "../../../board_top_level_menu.ini"
+#define MAIN_PAGE_GAUGES_FILE "../../../board_front_gauges.ini"
+
+! Drop LTFT TunerStudio page. Must match EFI_LTFT_CONTROL=FALSE in board.mk.
+#define LTFT_PAGE_ENABLED false
+
+! Channel trip array length (board_config.txt)
+#define PDM_CHANNEL_COUNT 12
+
+! Lua gauges labeled as ADIO current placeholders (e-fuse SM / Lua later)
+#define GAUGE_NAME_LUA_0 "ADIO1 current (Lua)"
+#define GAUGE_NAME_LUA_1 "ADIO2 current (Lua)"
+#define GAUGE_NAME_LUA_2 "ADIO3 current (Lua)"
+#define GAUGE_NAME_LUA_3 "ADIO4 current (Lua)"
+#define GAUGE_NAME_LUA_4 "ADIO5 current (Lua)"
+#define GAUGE_NAME_LUA_5 "ADIO6 current (Lua)"
+#define GAUGE_NAME_LUA_6 "ADIO7 current (Lua)"
+#define GAUGE_NAME_LUA_7 "ADIO8 current (Lua)"
+#define GAUGE_LUA_FROM_0 0
+#define GAUGE_LUA_FROM_1 0
+#define GAUGE_LUA_FROM_2 0
+#define GAUGE_LUA_FROM_3 0
+#define GAUGE_LUA_FROM_4 0
+#define GAUGE_LUA_FROM_5 0
+#define GAUGE_LUA_FROM_6 0
+#define GAUGE_LUA_FROM_7 0
+#define GAUGE_LUA_TO_0 20
+#define GAUGE_LUA_TO_1 20
+#define GAUGE_LUA_TO_2 20
+#define GAUGE_LUA_TO_3 20
+#define GAUGE_LUA_TO_4 20
+#define GAUGE_LUA_TO_5 20
+#define GAUGE_LUA_TO_6 20
+#define GAUGE_LUA_TO_7 20
+
+#define GPPWM_1_NAME "PDM PWM 1"
+#define GPPWM_2_NAME "PDM PWM 2"
+#define GPPWM_3_NAME "PDM PWM 3"
+#define GPPWM_4_NAME "PDM PWM 4"
+
+! Documented small-can-board / PDM-style gate (firmware pages still compiled)
+#define ts_show_engine_control false
+
+! --- Hide engine-centric TunerStudio chrome ---
+#define ts_show_etb false
 #define ts_show_etb_pins false
+#define ts_show_etb_bias_curve false
+#define ts_show_etb_frequency false
 #define ts_show_analog_divider false
 #define ts_show_spi false
 #define ts_show_main_relay false
 #define ts_show_egt false
+#define ts_show_ign_key_menu false
+#define ts_show_vvl_control false
+#define ts_show_trigger_advanced false
+#define ts_show_trigger_overrides false
+#define ts_show_alternator false
+#define ts_show_fan_settings false
+#define ts_show_fan2_settings false
+#define ts_show_air_conditioning false
+#define ts_show_ecu_stimulator false
+#define ts_show_injTest false
+#define ts_show_popular_vehicles false
+#define ts_show_gdi false
+#define ts_show_experimental false
+#define ts_show_hd false
+#define ts_show_rotary false
+#define ts_show_torque_model false
+#define ts_show_virtual_dyno false
+#define ts_show_tcu false
+#define ts_show_wbo_can_menu false
+#define ts_show_fuel_pump false
+#define ts_show_injection false
+#define ts_show_ignition false
+#define ts_show_ignitionOutputs false
+#define ts_show_injection_hardware false
+#define ts_show_software_knock false
+#define ts_show_maf false
+#define ts_show_idle_hardware false
+#define ts_show_clutch_up false
+#define ts_show_clutch_down false
+#define ts_show_oil_sensors false
+#define ts_show_oil_pressure_sensor false
+#define ts_show_oil_temp_sensor false
+#define ts_show_sent false
+#define ts_show_vehicle_speed_sensor false
+#define ts_show_baroSettings false
+#define ts_show_fuel_pressure_sensor false
+#define ts_show_fuel_temp_sensor false
+#define ts_show_fuel_level_sensor false
+#define ts_show_tps2 false
+#define ts_show_iat false
+#define ts_show_analog_o2 false
+#define ts_show_ego2 false
+#define ts_show_k_line false
+#define ts_show_mc33810 false
+#define ts_show_output_diag false
+#define ts_show_i2c false
+#define ts_show_aux_connections false
+#define ts_show_sd_card false
+#define ts_show_engine_make false
+#define ts_show_engine_code false
+#define ts_show_compression_ratio false
+#define ts_show_forced_induction false
+#define ts_show_strokes false
+#define ts_show_firing_order false
+#define ts_show_fuel_strategy false
+#define ts_show_ve_table_map false
+#define ts_show_cranking_rpm false
+#define ts_show_crankingTpsCurve false
+#define ts_show_map_estimate false
+#define ts_show_wall_wetting false
+#define ts_show_complexWallModel false
+#define ts_show_adv_wall_wetting false
+#define ts_show_knock_cylinder_mapping false
+#define ts_show_flood_clear false
+#define ts_show_faster_spin_up false
+#define ts_show_AdvanceCorrectionsForCranking false
+#define ts_show_useRunningMathForCranking false
+#define ts_show_long_term_fuel_trim false
+#define ts_show_turbo_sensors false
+#define ts_show_twoWireBatchIgnition false
+#define ts_show_analog_ego false
+#define ts_show_traction_control false
+#define ts_show_exhaust_vvt false
+#define ts_show_second_bank false
+#define ts_show_map_averaging_enabled false
+#define ts_show_linear_thermistors false
+#define ts_show_useNoiselessTriggerDecoder false
+#define ts_show_gasoline_scale false
+#define ts_show_final_ratio false
+#define ts_show_ltft_sd_card_message false
+#define ts_show_ignitionMode false
+#define ts_show_injection_mode false
+#define ts_show_charge_estimation false
+#define ts_show_useSeparateVeForIdle false
+#define ts_show_vvt_output false
+#define ts_show_dc_hardware false
+#define ts_show_hbridge_function false
+#define ts_show_brake_pedal_indicator false
+
+! Keep PDM-useful surfaces
+#define ts_show_vehicle_name true
+#define ts_show_status_leds true
+#define ts_show_console_settings true
+#define ts_show_full_pinout true
+#define ts_show_bench_test true
+#define ts_show_top_level_can_menu true
+#define ts_show_canbus_sniffer true
+#define ts_show_gppwm_1 true
+#define ts_show_gppwm_2 true
+#define ts_show_gppwm_3 true
+#define ts_show_gppwm_4 true
+#define ts_show_aux_sensors true
+#define ts_show_live_data true
+#define ts_show_analog_input_settings true

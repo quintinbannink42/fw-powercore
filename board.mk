@@ -21,3 +21,5 @@ DDEFS += -DDEFAULT_ENGINE_TYPE=engine_type_e::MINIMAL_PINS
 # Skip unused engine weight where safe for a PDM
 DDEFS += -DEFI_WIDEBAND_FIRMWARE_UPDATE=FALSE
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=FALSE
+# Must match LTFT_PAGE_ENABLED false in prepend.txt (static_assert in tunerstudio.cpp)
+DDEFS += -DEFI_LTFT_CONTROL=FALSE

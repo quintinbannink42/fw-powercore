@@ -38,7 +38,10 @@ Upstream patterns: `tdg-pdm8` + `protected_gpio` in rusEFI — extend those; **n
 
 ## Connectors / TunerStudio
 
-Draft rusEFI-style YAML under [`connectors/`](connectors/) (P0 for PDM INI codegen). See [`connectors/README.md`](connectors/README.md).
+Draft rusEFI-style YAML under [`connectors/`](connectors/) (pin names for INI
+codegen). TunerStudio is **PDM-shaped**: see [`docs/TUNERSTUDIO_PDM.md`](docs/TUNERSTUDIO_PDM.md)
+for how to regenerate `generated/tunerstudio/generated/rusefi_powercore.ini`
+and what remains for e-fuse SM + CAN consume.
 
 ## Bootstrap
 
@@ -64,11 +67,10 @@ GitHub Actions: `.github/workflows/build-firmware.yaml` (needs submodule + optio
 
 ## Open firmware work
 
-- PDM-shaped TunerStudio INI (strip ECU pages) — next: FW-INI spike
 - Extend protection beyond 8 channels (ADIO5–8) or second `protected_gpio` bank
-- Full electronic-fuse state machine (inrush window, retry count, latch, over-temp)
-- CAN consume from rusEFI ECU → pump/fan/output logic + status DBC
-- TunerStudio gauges for amps + fault state
+- Full electronic-fuse state machine (inrush window, retry count, latch, over-temp) — TS fields exist, firmware does not consume them yet ([`docs/TUNERSTUDIO_PDM.md`](docs/TUNERSTUDIO_PDM.md))
+- CAN consume from rusEFI ECU → pump/fan/output logic + status DBC (TS placeholders only)
+- Lua (or live-data) gauges for ADIO amps + fault state
 - Optional HP DIR pins (`H144_OUT_IO1`–`4`) for half/full bridge
 
 Sprint notes: [`docs/FW_SPRINT.md`](docs/FW_SPRINT.md)

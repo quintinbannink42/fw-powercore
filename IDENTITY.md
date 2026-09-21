@@ -13,6 +13,6 @@
 ## Constraints TBD
 
 - hellen-one / rusEFI board-name rules: validate `powercore` in FW-0 compile / registry; escalate to Boss if rejected → try `powercorea`.
-- TunerStudio environment must be **PDM-shaped** (channels, current, trips, CAN consume) — not a full ECU page set.
+- TunerStudio environment is **PDM-shaped** (channels, current, trips, CAN consume) — see [`docs/TUNERSTUDIO_PDM.md`](docs/TUNERSTUDIO_PDM.md). Not a full ECU page set.
 
 Owner: Code Jeoff · Reports to: Boss · Locked brief: `../POWERCORE_BRIEF.md`

@@ -1,0 +1,97 @@
+# PowerCore TunerStudio (PDM-shaped INI)
+
+PowerCore is a **standalone PDM**, not an engine ECU. Generated TunerStudio
+`rusefi_powercore.ini` must present channels, current, trip placeholders, faults,
+and CAN hooks — not Fuel / Ignition / Cranking tables.
+
+Identity stays **`powercore`** (`SHORT_BOARD_NAME` / `FIRMWARE_ID`). Fallback
+`powercorea` only if the platform rejects the name.
+
+## How TunerStudio is generated
+
+rusEFI builds the INI from:
+
+| Input | Role |
+|-------|------|
+| `ext/rusefi/firmware/tunerstudio/tunerstudio.template.ini` | Shared UI |
+| `ext/rusefi/firmware/integration/rusefi_config.txt` | Persistent config layout |
+| `prepend.txt` | Board `#define`s (first writer wins) |
+| `connectors/*.yaml` | Pin drop-down names |
+| `board_*.ini` / `board_config.txt` | Board UI + extra config fields |
+
+`tdg-pdm8` uses `MINIMAL_PINS` + `protected_gpio` but ships an **empty**
+`prepend.txt`, so its INI is still a full ECU. PowerCore follows
+`hellen/small-can-board` (`ts_show_engine_control`, `LTFT_PAGE_ENABLED false`)
+and additionally **replaces** `TOP_LEVEL_MENU_FILE` with PDM menus.
+
+## How to regenerate the INI
+
+From the repo root (after `git submodule update --init --recursive`):
+
+```bash
+./compile_firmware.sh
+```
+
+That runs rusEFI `bin/compile.sh` with `meta-info.env`. Config generation is
+part of the firmware make (do **not** invoke `gen_config_board.sh` by hand).
+
+Published INI:
+
+- `generated/tunerstudio/generated/rusefi_powercore.ini`
+- `generated/tunerstudio/generated/signature_powercore.txt`
+
+GitHub Actions (`.github/workflows/build-firmware.yaml`) uploads the INI as a
+build artifact (`uploads: ini`).
+
+Paths in `prepend.txt` (`TOP_LEVEL_MENU_FILE`, `MAIN_PAGE_GAUGES_FILE`) are
+relative to `ext/rusefi/firmware` (`BOARD_DIR=../../..`). Keep the overlay
+layout (`compile_firmware.sh` + `meta-info.env` at repo root).
+
+## What this pass changes
+
+- **Hides** Fuel / Ignition / Cranking / Idle / Advanced engine menus by
+  swapping `tunerstudio/top_level_menu.ini` for `board_top_level_menu.ini`.
+- **Adds** PowerCore pages: HP1–4, ADIO1–8, ADIO trip placeholders, faults,
+  CAN consume/status hooks, Lua PWM outputs, current-sense analog mapping.
+- **Adds** persistent `pdmChannelTrip[12]` + CAN ID fields via `board_config.txt`.
+- **Front page gauges:** VBATT, HP1–4 current (aux linear), ADIO1–2 Lua
+  placeholders, CAN RX counter.
+- **Drops LTFT page** (`LTFT_PAGE_ENABLED false` + `EFI_LTFT_CONTROL=FALSE`).
+- **Defaults** `isInjectionEnabled` / `isIgnitionEnabled` false.
+
+## Out of scope (do not treat as done)
+
+### E-fuse state machine
+
+`protected_gpio` still trips **instantly** on `MaximumAllowedCurrent`
+(60 A HP / 10 A ADIO). TunerStudio inrush window, trip time, retry, and latch
+**persist in the tune** but firmware does **not** read them yet.
+
+Next workstream:
+
+1. Extend `protected_gpio` (or a thin wrapper) with inrush window + delayed OC.
+2. Read `engineConfiguration->pdmChannelTrip[i]` instead of compile-time constants.
+3. Publish per-channel current + fault bits into live data (today HP current is
+   aux linear; ADIO current gauges are Lua placeholders).
+4. Second bank / SW fuse for ADIO5–8 (`OUT_IO5–8`; RES1–3 are not `EFI_ADC`).
+
+Build that **on top of** `protected_gpio` / `tdg-pdm8`. No parallel protection
+layer.
+
+### CAN consume
+
+`pdmCanConsumeEnable` / base IDs are UI + storage only. Not wired to rusEFI ECU
+broadcast → pump/fan/output logic, and there is no status DBC yet.
+
+Next workstream: consume ECU frames at `pdmCanConsumeBaseId`, drive Lua/GPPWM
+outputs, publish faults at `pdmCanStatusBaseId`.
+
+## Leftover ECU chrome
+
+The shared template still has **Setup** entries (Trigger, Limits and
+protection) that have no board-level hide flag. They are not Fuel/Ignition
+tables. Full pinout + bench test stay on for bring-up.
+
+Live-data **View** still lists engine fragments (fuel_computer, …) because that
+menu is generated from firmware live-data modules. `ignore_gauges.txt` strips
+the obvious ECU gauge categories from the picker.

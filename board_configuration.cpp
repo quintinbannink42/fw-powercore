@@ -93,6 +93,65 @@ static void pdmBoardDefaultConfiguration() {
 	engineConfiguration->luaOutputPins[6] = Gpio::PROTECTED_PIN_6; // ADIO3
 	engineConfiguration->luaOutputPins[7] = Gpio::PROTECTED_PIN_7; // ADIO4
 
+	// PDM, not an engine ECU — hide injection/ignition gated TunerStudio fields
+	engineConfiguration->isInjectionEnabled = false;
+	engineConfiguration->isIgnitionEnabled = false;
+
+	strcpy(engineConfiguration->engineMake, "PowerCore");
+	strcpy(engineConfiguration->vehicleName, "PDM");
+
+	// HP1-4 current via aux linear (volts * AmpsPerVolt). Cal blocked on first silicon.
+	engineConfiguration->auxLinear1.hwChannel = H144_IN_AUX1_ANALOG;
+	engineConfiguration->auxLinear1.v1 = 0;
+	engineConfiguration->auxLinear1.value1 = 0;
+	engineConfiguration->auxLinear1.v2 = 1;
+	engineConfiguration->auxLinear1.value2 = HP_AMPS_PER_VOLT;
+	engineConfiguration->auxLinear2.hwChannel = H144_IN_AUX2_ANALOG;
+	engineConfiguration->auxLinear2.v1 = 0;
+	engineConfiguration->auxLinear2.value1 = 0;
+	engineConfiguration->auxLinear2.v2 = 1;
+	engineConfiguration->auxLinear2.value2 = HP_AMPS_PER_VOLT;
+	engineConfiguration->auxLinear3.hwChannel = H144_IN_AUX3_ANALOG;
+	engineConfiguration->auxLinear3.v1 = 0;
+	engineConfiguration->auxLinear3.value1 = 0;
+	engineConfiguration->auxLinear3.v2 = 1;
+	engineConfiguration->auxLinear3.value2 = HP_AMPS_PER_VOLT;
+	engineConfiguration->auxLinear4.hwChannel = H144_IN_AUX4_ANALOG;
+	engineConfiguration->auxLinear4.v1 = 0;
+	engineConfiguration->auxLinear4.value1 = 0;
+	engineConfiguration->auxLinear4.v2 = 1;
+	engineConfiguration->auxLinear4.value2 = HP_AMPS_PER_VOLT;
+
+	// ADIO current-sense ADCs (Lua analog). ADIO6-8 RES pins are not EFI_ADC yet.
+	engineConfiguration->auxAnalogInputs[0] = H144_IN_MAP1;  // ADIO1
+	engineConfiguration->auxAnalogInputs[1] = H144_IN_MAP2;  // ADIO2
+	engineConfiguration->auxAnalogInputs[2] = H144_IN_MAP3;  // ADIO3
+	engineConfiguration->auxAnalogInputs[3] = H144_IN_O2S;   // ADIO4
+	engineConfiguration->auxAnalogInputs[4] = H144_IN_O2S2;  // ADIO5
+
+	// E-fuse trip placeholders (TunerStudio). Not consumed by firmware until SM lands.
+	for (size_t i = 0; i < 4; i++) {
+		engineConfiguration->pdmChannelTrip[i].inrushLimitA = 80.0f;
+		engineConfiguration->pdmChannelTrip[i].ocLimitA = HP_MAX_CURRENT_A;
+		engineConfiguration->pdmChannelTrip[i].inrushWindowMs = 50;
+		engineConfiguration->pdmChannelTrip[i].tripTimeMs = 20;
+		engineConfiguration->pdmChannelTrip[i].retryCount = 3;
+		engineConfiguration->pdmChannelTrip[i].latchOnFault = false;
+	}
+	for (size_t i = 4; i < efi::size(engineConfiguration->pdmChannelTrip); i++) {
+		engineConfiguration->pdmChannelTrip[i].inrushLimitA = 20.0f;
+		engineConfiguration->pdmChannelTrip[i].ocLimitA = ADIO_MAX_CURRENT_A;
+		engineConfiguration->pdmChannelTrip[i].inrushWindowMs = 20;
+		engineConfiguration->pdmChannelTrip[i].tripTimeMs = 10;
+		engineConfiguration->pdmChannelTrip[i].retryCount = 3;
+		engineConfiguration->pdmChannelTrip[i].latchOnFault = false;
+	}
+
+	engineConfiguration->pdmCanConsumeEnable = false;
+	engineConfiguration->pdmCanStatusEnable = false;
+	engineConfiguration->pdmCanConsumeBaseId = 0x200;
+	engineConfiguration->pdmCanStatusBaseId = 0x240;
+
 	// Optional HP DIR: H144_OUT_IO1..IO4 — assign when bridge stage is fitted
 }
 
