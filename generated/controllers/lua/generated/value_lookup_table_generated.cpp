@@ -22,6 +22,9 @@ const ConfigParameter allParameters[] = {
 	{ 0x00B315F6, // useIdleTimingPidControl
 		[]() -> float { return engineConfiguration->useIdleTimingPidControl; },
 		[](float value) { engineConfiguration->useIdleTimingPidControl = value; } },
+	{ 0x00CD8624, // pdmCanStatusBaseId
+		[]() -> float { return engineConfiguration->pdmCanStatusBaseId; },
+		[](float value) { engineConfiguration->pdmCanStatusBaseId = value; } },
 	{ 0x00D2AD58, // useHbridgesToDriveIdleStepper
 		[]() -> float { return engineConfiguration->useHbridgesToDriveIdleStepper; },
 		[](float value) { engineConfiguration->useHbridgesToDriveIdleStepper = value; } },
@@ -88,6 +91,9 @@ const ConfigParameter allParameters[] = {
 	{ 0x0811AF43, // useCompensatedMap
 		[]() -> float { return engineConfiguration->useCompensatedMap; },
 		[](float value) { engineConfiguration->useCompensatedMap = value; } },
+	{ 0x08AE5363, // pdmCanStatusEnable
+		[]() -> float { return engineConfiguration->pdmCanStatusEnable; },
+		[](float value) { engineConfiguration->pdmCanStatusEnable = value; } },
 	{ 0x09A736B3, // devBit0
 		[]() -> float { return engineConfiguration->devBit0; },
 		[](float value) { engineConfiguration->devBit0 = value; } },
@@ -628,6 +634,9 @@ const ConfigParameter allParameters[] = {
 	{ 0x4EDA3A9E, // warningPeriod
 		[]() -> float { return engineConfiguration->warningPeriod; },
 		[](float value) { engineConfiguration->warningPeriod = value; } },
+	{ 0x4FF248BA, // pdmCanConsumeBaseId
+		[]() -> float { return engineConfiguration->pdmCanConsumeBaseId; },
+		[](float value) { engineConfiguration->pdmCanConsumeBaseId = value; } },
 	{ 0x513152C4, // overrideTriggerGaps
 		[]() -> float { return engineConfiguration->overrideTriggerGaps; },
 		[](float value) { engineConfiguration->overrideTriggerGaps = value; } },
@@ -682,6 +691,9 @@ const ConfigParameter allParameters[] = {
 	{ 0x57AB57D9, // vvtControlMinRpm
 		[]() -> float { return engineConfiguration->vvtControlMinRpm; },
 		[](float value) { engineConfiguration->vvtControlMinRpm = value; } },
+	{ 0x57D315F9, // pdmCanConsumeEnable
+		[]() -> float { return engineConfiguration->pdmCanConsumeEnable; },
+		[](float value) { engineConfiguration->pdmCanConsumeEnable = value; } },
 	{ 0x57DA1407, // flexFuelTransientComp
 		[]() -> float { return engineConfiguration->flexFuelTransientComp; },
 		[](float value) { engineConfiguration->flexFuelTransientComp = value; } },

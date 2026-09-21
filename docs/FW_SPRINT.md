@@ -71,3 +71,15 @@ Log confirms: `SHORT_BOARD_NAME: powercore`, `FIRMWARE_ID="powercore"`, `PROJECT
 ## FW-INI spike — 2026-09-21
 
 PDM-shaped TunerStudio: replaced Fuel/Ignition/Cranking top-level menus, added HP/ADIO trip + CAN consume UI hooks, dropped LTFT page. See [`TUNERSTUDIO_PDM.md`](TUNERSTUDIO_PDM.md). Identity still `powercore`.
+
+## Compile result — 2026-09-21 (this INI PR)
+
+**PASS** — `./compile_firmware.sh` on cloud VM with rusEFI `provide_gcc.sh` ARM GNU 14.2. Identity stayed `powercore`.
+
+- **Exit code:** 0
+- **INI:** `generated/tunerstudio/generated/rusefi_powercore.ini` (~12.7k lines)
+  - Top-level menus: Setup, **PowerCore**, Sensors, CAN-bus, Controller (no Fuel / Ignition / Cranking / Idle / Advanced)
+  - `nPages = 4` (LTFT page `0x0200` dropped via `EFI_LTFT_CONTROL FALSE`)
+  - Signature contains `powercore`
+- **Bin:** `ext/rusefi/firmware/build/rusefi.bin` 574952 B; flash0 ~73% of 768 KB
+- VM extras needed for this environment (not board files): `p7zip-full`, `dosfstools`, `bc`

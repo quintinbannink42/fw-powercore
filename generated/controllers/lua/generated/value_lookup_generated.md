@@ -1918,6 +1918,18 @@ Delay before cutting fuel due to low oil pressure. Use this to ignore short pres
 ### engineShutDownPeriod
 
 
+### pdmCanConsumeEnable
+
+
+### pdmCanStatusEnable
+
+
+### pdmCanConsumeBaseId
+rusEFI ECU broadcast base ID to consume (pump/fan/output logic).
+
+### pdmCanStatusBaseId
+PowerCore status / fault TX base ID.
+
 ### knockSuppressMinTps
 Below TPS value all knock suppression will be disabled.
 

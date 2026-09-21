@@ -1924,6 +1924,18 @@ float getConfigValueByHash(const int hash) {
 // engineShutDownPeriod
 		case -1846425734:
 			return engineConfiguration->engineShutDownPeriod;
+// pdmCanConsumeEnable
+		case 1473451513:
+			return engineConfiguration->pdmCanConsumeEnable;
+// pdmCanStatusEnable
+		case 145642339:
+			return engineConfiguration->pdmCanStatusEnable;
+// pdmCanConsumeBaseId
+		case 1341278394:
+			return engineConfiguration->pdmCanConsumeBaseId;
+// pdmCanStatusBaseId
+		case 13469220:
+			return engineConfiguration->pdmCanStatusBaseId;
 // knockSuppressMinTps
 		case 893776859:
 			return engineConfiguration->knockSuppressMinTps;
@@ -5426,6 +5438,26 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1846425734:
 	{
 		engineConfiguration->engineShutDownPeriod = value;
+		return 1;
+	}
+		case 1473451513:
+	{
+		engineConfiguration->pdmCanConsumeEnable = (int)value;
+		return 1;
+	}
+		case 145642339:
+	{
+		engineConfiguration->pdmCanStatusEnable = (int)value;
+		return 1;
+	}
+		case 1341278394:
+	{
+		engineConfiguration->pdmCanConsumeBaseId = (int)value;
+		return 1;
+	}
+		case 13469220:
+	{
+		engineConfiguration->pdmCanStatusBaseId = (int)value;
 		return 1;
 	}
 		case 893776859:
