@@ -87,3 +87,12 @@ PDM-shaped TunerStudio: replaced Fuel/Ignition/Cranking top-level menus, added H
 
 Electronic-fuse SM on the `protected_gpio` pattern reads `pdmChannelTrip[12]`.
 12-channel bank `PROTECTED_PIN_0..11`. See [`EFUSE.md`](EFUSE.md).
+
+### Compile result — 2026-09-21 (this e-fuse PR)
+
+**PASS** — `./compile_firmware.sh` on cloud VM with rusEFI `provide_gcc.sh` ARM GNU 14.2. Identity stayed `powercore`. Host SM tests: `firmware/run_pdm_efuse_sm_test.sh` all passed.
+
+- **Exit code:** 0
+- **INI:** `generated/tunerstudio/generated/rusefi_powercore.ini` — trip field tooltips no longer say placeholder; signature contains `powercore`
+- **Bin:** `ext/rusefi/firmware/build/rusefi.bin` 577628 B; flash0 73.45% of 768 KB
+- `BOARD_EXT_GPIOCHIPS` includes a reserved slot (`BOARD_TLE9104_COUNT=1`) so `gpiochip_register` is not a stub
