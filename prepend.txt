@@ -22,15 +22,15 @@
 ! Channel trip array length (board_engine_configuration.txt)
 #define PDM_CHANNEL_COUNT 12
 
-! Lua gauges labeled as ADIO current placeholders (e-fuse SM / Lua later)
-#define GAUGE_NAME_LUA_0 "ADIO1 current (Lua)"
-#define GAUGE_NAME_LUA_1 "ADIO2 current (Lua)"
-#define GAUGE_NAME_LUA_2 "ADIO3 current (Lua)"
-#define GAUGE_NAME_LUA_3 "ADIO4 current (Lua)"
-#define GAUGE_NAME_LUA_4 "ADIO5 current (Lua)"
-#define GAUGE_NAME_LUA_5 "ADIO6 current (Lua)"
-#define GAUGE_NAME_LUA_6 "ADIO7 current (Lua)"
-#define GAUGE_NAME_LUA_7 "ADIO8 current (Lua)"
+! Lua gauges: firmware writes ADIO1-8 current from the e-fuse sense path
+#define GAUGE_NAME_LUA_0 "ADIO1 current"
+#define GAUGE_NAME_LUA_1 "ADIO2 current"
+#define GAUGE_NAME_LUA_2 "ADIO3 current"
+#define GAUGE_NAME_LUA_3 "ADIO4 current"
+#define GAUGE_NAME_LUA_4 "ADIO5 current"
+#define GAUGE_NAME_LUA_5 "ADIO6 current"
+#define GAUGE_NAME_LUA_6 "ADIO7 current"
+#define GAUGE_NAME_LUA_7 "ADIO8 current"
 #define GAUGE_LUA_FROM_0 0
 #define GAUGE_LUA_FROM_1 0
 #define GAUGE_LUA_FROM_2 0
@@ -48,10 +48,10 @@
 #define GAUGE_LUA_TO_6 20
 #define GAUGE_LUA_TO_7 20
 
-#define GPPWM_1_NAME "PDM PWM 1"
-#define GPPWM_2_NAME "PDM PWM 2"
-#define GPPWM_3_NAME "PDM PWM 3"
-#define GPPWM_4_NAME "PDM PWM 4"
+#define GPPWM_1_NAME "ADIO5"
+#define GPPWM_2_NAME "ADIO6"
+#define GPPWM_3_NAME "ADIO7"
+#define GPPWM_4_NAME "ADIO8"
 
 ! Documented small-can-board / PDM-style gate (firmware pages still compiled)
 #define ts_show_engine_control false

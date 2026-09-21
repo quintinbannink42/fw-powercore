@@ -27,21 +27,21 @@ KiCad project stays **`pdmrazora`** (hellen-one-safe).
 
 | Group | Count | Enable | Current sense (I) | Voltage sense (V) | Protection |
 |-------|------:|--------|-------------------|-------------------|------------|
-| High-power HP1–4 | 4 | `H144_OUT_PWM1`–`4` | `H144_IN_AUX1`–`4` ANALOG | — | `protected_gpio` @ 60 A class; AmpsPerVolt **19.3** starter |
-| ADIO1–4 | 4 | `H144_OUT_PWM5`–`8` | MAP1 / MAP2 / MAP3 / O2S | TPS / PPS / TPS2 mux / PPS2 mux | `protected_gpio` @ 10 A class; AmpsPerVolt **4.26** starter |
-| ADIO5–8 | 4 | `H144_OUT_IO5`–`8` | O2S2 / RES1 / RES2 / RES3 | CLT / IAT / AT1 mux / AT2 mux | PROFET HW trip; SW bank TODO |
+| High-power HP1–4 | 4 | `H144_OUT_PWM1`–`4` | `H144_IN_AUX1`–`4` ANALOG | — | e-fuse SM @ 80 A inrush / 60 A OC; AmpsPerVolt **19.3** starter |
+| ADIO1–4 | 4 | `H144_OUT_PWM5`–`8` | MAP1 / MAP2 / MAP3 / O2S | TPS / PPS / TPS2 mux / PPS2 mux | e-fuse SM @ 20 A inrush / 10 A OC; AmpsPerVolt **4.26** starter |
+| ADIO5–8 | 4 | `H144_OUT_IO5`–`8` | O2S2 / RES1 / RES2 / RES3 | CLT / IAT / AT1 mux / AT2 mux | e-fuse bank `PROTECTED_PIN_8-11`; ADIO6–8 SW OC waits on ADC3 |
 | ADIO pull-ups | 8 | `H144_OUT_IO9`–`13`, `H144_GP_IO1`–`3` | — | — | Soft 4k7 to SENSOR_5V |
 
 Also: CAN on `H144_CAN_*`, VBATT on `H144_IN_VBATT` (divider **11.0**), `H144_GP8` **PWR_EN** for SENSOR_5V / switched analogs.
 
-Upstream patterns: `tdg-pdm8` + `protected_gpio` in rusEFI — extend those; **no parallel protection layer**.
+Upstream pattern: `tdg-pdm8` + rusEFI `protected_gpio` with the e-fuse SM filled in — **no parallel protection layer**. See [`docs/EFUSE.md`](docs/EFUSE.md).
 
 ## Connectors / TunerStudio
 
 Draft rusEFI-style YAML under [`connectors/`](connectors/) (pin names for INI
 codegen). TunerStudio is **PDM-shaped**: see [`docs/TUNERSTUDIO_PDM.md`](docs/TUNERSTUDIO_PDM.md)
 for how to regenerate `generated/tunerstudio/generated/rusefi_powercore.ini`
-and what remains for e-fuse SM + CAN consume.
+and what remains for CAN consume. E-fuse SM: [`docs/EFUSE.md`](docs/EFUSE.md).
 
 ## Bootstrap
 
@@ -61,16 +61,14 @@ GitHub Actions: `.github/workflows/build-firmware.yaml` (needs submodule + optio
 1. Flash, confirm USB + CAN alive, LEDs on module.
 2. Toggle `auxOutputPins[0..3]` (HP) with no load; confirm gate drive.
 3. Apply known load; **calibrate** `HP_AMPS_PER_VOLT` / `ADIO_AMPS_PER_VOLT` (BOM starters only until silicon).
-4. Verify trip by exceeding software limit safely (current-limited supply).
+4. Verify trip: inrush window, delayed OC, fast short, retry/latch ([`docs/EFUSE.md`](docs/EFUSE.md)).
 5. Enable ADIO pull-ups; check open-circuit voltage ~5 V through 4k7.
-6. Implement Razor-style inrush / retry / latch **on top of** `protected_gpio`.
 
 ## Open firmware work
 
-- Extend protection beyond 8 channels (ADIO5–8) or second `protected_gpio` bank
-- Full electronic-fuse state machine (inrush window, retry count, latch, over-temp) — TS fields exist, firmware does not consume them yet ([`docs/TUNERSTUDIO_PDM.md`](docs/TUNERSTUDIO_PDM.md))
+- ADC3 analog for ADIO6–8 (`H144_IN_RES1-3`) so software OC matches ADIO1–5
 - CAN consume from rusEFI ECU → pump/fan/output logic + status DBC (TS placeholders only)
-- Lua (or live-data) gauges for ADIO amps + fault state
+- Over-temp staged shutdown (no TS field yet)
 - Optional HP DIR pins (`H144_OUT_IO1`–`4`) for half/full bridge
 
 Sprint notes: [`docs/FW_SPRINT.md`](docs/FW_SPRINT.md)

@@ -12,10 +12,10 @@ Gpio GENERATED_OUTPUTS[] = {
 	Gpio::PROTECTED_PIN_5, // ADIO2
 	Gpio::PROTECTED_PIN_6, // ADIO3
 	Gpio::PROTECTED_PIN_7, // ADIO4
-	Gpio::D2, // ADIO5
-	Gpio::G11, // ADIO6
-	Gpio::G3, // ADIO7
-	Gpio::G4, // ADIO8
+	Gpio::PROTECTED_PIN_8, // ADIO5
+	Gpio::PROTECTED_PIN_9, // ADIO6
+	Gpio::PROTECTED_PIN_10, // ADIO7
+	Gpio::PROTECTED_PIN_11, // ADIO8
 // "HP1",
 // "HP2",
 // "HP3",

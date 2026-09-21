@@ -1,7 +1,7 @@
 # PowerCore TunerStudio (PDM-shaped INI)
 
 PowerCore is a **standalone PDM**, not an engine ECU. Generated TunerStudio
-`rusefi_powercore.ini` must present channels, current, trip placeholders, faults,
+`rusefi_powercore.ini` must present channels, current, e-fuse trip, faults,
 and CAN hooks — not Fuel / Ignition / Cranking tables.
 
 Identity stays **`powercore`** (`SHORT_BOARD_NAME` / `FIRMWARE_ID`). Fallback
@@ -59,7 +59,7 @@ regenerates. After editing that file on an incremental tree, `touch prepend.txt`
 
 - **Hides** Fuel / Ignition / Cranking / Idle / Advanced engine menus by
   swapping `tunerstudio/top_level_menu.ini` for `board_top_level_menu.ini`.
-- **Adds** PowerCore pages: HP1–4, ADIO1–8, ADIO trip placeholders, faults,
+- **Adds** PowerCore pages: HP1–4, ADIO1–8, ADIO e-fuse trip, faults,
   CAN consume/status hooks, Lua PWM outputs, current-sense analog mapping.
 - **Adds** persistent `pdmChannelTrip[12]` + CAN ID fields via
   `board_engine_configuration.txt` (spliced into `engine_configuration_s`, not
@@ -70,24 +70,19 @@ regenerates. After editing that file on an incremental tree, `touch prepend.txt`
   lifts it into DDEFS; generator publishes `LTFT_PAGE_ENABLED false`).
 - **Defaults** `isInjectionEnabled` / `isIgnitionEnabled` false.
 
+## E-fuse state machine
+
+Landed. See [`EFUSE.md`](EFUSE.md). TunerStudio `pdmChannelTrip[]` is read by
+firmware on all 12 channels. Instantaneous `protected_gpio` trip is replaced by
+inrush window + delayed OC + fast short + retry/latch.
+
+Still open on the protection path:
+
+- ADIO6–8 software OC needs ADC3 analog (`H144_IN_RES1-3` are not `EFI_ADC`).
+- Over-temp staged shutdown (no TS field).
+- Per-channel fault bits on CAN status TX (below).
+
 ## Out of scope (do not treat as done)
-
-### E-fuse state machine
-
-`protected_gpio` still trips **instantly** on `MaximumAllowedCurrent`
-(60 A HP / 10 A ADIO). TunerStudio inrush window, trip time, retry, and latch
-**persist in the tune** but firmware does **not** read them yet.
-
-Next workstream:
-
-1. Extend `protected_gpio` (or a thin wrapper) with inrush window + delayed OC.
-2. Read `engineConfiguration->pdmChannelTrip[i]` instead of compile-time constants.
-3. Publish per-channel current + fault bits into live data (today HP current is
-   aux linear; ADIO current gauges are Lua placeholders).
-4. Second bank / SW fuse for ADIO5–8 (`OUT_IO5–8`; RES1–3 are not `EFI_ADC`).
-
-Build that **on top of** `protected_gpio` / `tdg-pdm8`. No parallel protection
-layer.
 
 ### CAN consume
 

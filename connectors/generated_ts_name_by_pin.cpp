@@ -6,18 +6,14 @@
 // see comments at declaration in pin_repository.h
 const char* getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch (brainPin) {
-		case Gpio::D2:
-			return "ADIO5";
-		case Gpio::G11:
-			return "ADIO6";
-		case Gpio::G3:
-			return "ADIO7";
-		case Gpio::G4:
-			return "ADIO8";
 		case Gpio::PROTECTED_PIN_0:
 			return "HP1";
 		case Gpio::PROTECTED_PIN_1:
 			return "HP2";
+		case Gpio::PROTECTED_PIN_10:
+			return "ADIO7";
+		case Gpio::PROTECTED_PIN_11:
+			return "ADIO8";
 		case Gpio::PROTECTED_PIN_2:
 			return "HP3";
 		case Gpio::PROTECTED_PIN_3:
@@ -30,6 +26,10 @@ const char* getBoardSpecificPinName(brain_pin_e brainPin) {
 			return "ADIO3";
 		case Gpio::PROTECTED_PIN_7:
 			return "ADIO4";
+		case Gpio::PROTECTED_PIN_8:
+			return "ADIO5";
+		case Gpio::PROTECTED_PIN_9:
+			return "ADIO6";
 		default:
 			return nullptr;
 	}

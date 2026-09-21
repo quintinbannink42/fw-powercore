@@ -19,7 +19,7 @@ No invented pins. KiCad / copper (`pdmrazora`) untouched. Not waiting on Jeoff f
 | Area | Change |
 |------|--------|
 | Sense constants | `HP_AMPS_PER_VOLT = 19.3f`, `ADIO_AMPS_PER_VOLT = 4.26f` (BOM starters); VBATT divider remains **11.0f** |
-| protected_gpio | Unchanged mapping: **HP1–4 + ADIO1–4** per PINMAP |
+| protected_gpio | 12-channel e-fuse bank: **HP1–4 + ADIO1–8** (`PROTECTED_PIN_0..11`) |
 | Identity | `SHORT_BOARD_NAME=powercore`, `FIRMWARE_ID=powercore` (fallback only if rejected: `powercorea`) |
 | Docs | README PowerCore-branded + PINMAP-aligned channel table; new `IDENTITY.md` |
 | Connectors | Draft YAML under `connectors/` (SuperSeal + logical channels / trip placeholders) for PDM INI |
@@ -31,10 +31,9 @@ No invented pins. KiCad / copper (`pdmrazora`) untouched. Not waiting on Jeoff f
 - **No parallel protection layer.** E-fuse SM builds on `protected_gpio` / `tdg-pdm8` patterns only.
 - Do not touch `/workspace/hellen-pdm-razor` KiCad or HELLCORE.
 
-## Next (after FW-INI)
+## Next (after e-fuse SM)
 
-1. E-fuse SM on `protected_gpio` — consume per-channel inrush / OC / retry / latch from `pdmChannelTrip[]` (TS placeholders landed).
-2. CAN consume signal list (rusEFI ECU broadcast → pump/fan/output logic). See `pdmCan*` fields.
+1. CAN consume signal list (rusEFI ECU broadcast → pump/fan/output logic). See `pdmCan*` fields.
 
 ## Compile / submodule status
 
@@ -83,3 +82,17 @@ PDM-shaped TunerStudio: replaced Fuel/Ignition/Cranking top-level menus, added H
   - Signature contains `powercore`
 - **Bin:** `ext/rusefi/firmware/build/rusefi.bin` 574952 B; flash0 ~73% of 768 KB
 - VM extras needed for this environment (not board files): `p7zip-full`, `dosfstools`, `bc`
+
+## FW-EFUSE — 2026-09-21
+
+Electronic-fuse SM on the `protected_gpio` pattern reads `pdmChannelTrip[12]`.
+12-channel bank `PROTECTED_PIN_0..11`. See [`EFUSE.md`](EFUSE.md).
+
+### Compile result — 2026-09-21 (this e-fuse PR)
+
+**PASS** — `./compile_firmware.sh` on cloud VM with rusEFI `provide_gcc.sh` ARM GNU 14.2. Identity stayed `powercore`. Host SM tests: `firmware/run_pdm_efuse_sm_test.sh` all passed.
+
+- **Exit code:** 0
+- **INI:** `generated/tunerstudio/generated/rusefi_powercore.ini` — trip field tooltips no longer say placeholder; signature contains `powercore`
+- **Bin:** `ext/rusefi/firmware/build/rusefi.bin` 577628 B; flash0 73.45% of 768 KB
+- `BOARD_EXT_GPIOCHIPS` includes a reserved slot (`BOARD_TLE9104_COUNT=1`) so `gpiochip_register` is not a stub

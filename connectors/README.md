@@ -19,9 +19,9 @@ These YAML files name PowerCore channels for a **PDM TunerStudio** environment (
 - Authoritative pins: `/workspace/hellen-pdm-razor/PINMAP.md`, `CONNECTOR.md`, `HARDWARE_BOM.md`.
 - Product title in `info`: **PowerCore / PDM**.
 
-## Next (after this INI pass)
+## Remaining firmware
 
-See [`docs/TUNERSTUDIO_PDM.md`](../docs/TUNERSTUDIO_PDM.md). Remaining firmware:
+See [`docs/TUNERSTUDIO_PDM.md`](../docs/TUNERSTUDIO_PDM.md) and [`docs/EFUSE.md`](../docs/EFUSE.md). Remaining:
 
-1. E-fuse SM on `protected_gpio` consuming `pdmChannelTrip[]`.
-2. CAN consume signal list (rusEFI ECU broadcast → pump/fan/output logic).
+1. CAN consume signal list (rusEFI ECU broadcast → pump/fan/output logic).
+2. ADC3 analog for ADIO6-8 RES ISENSE.
