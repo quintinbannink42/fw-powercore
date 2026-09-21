@@ -52,6 +52,9 @@ layout (`compile_firmware.sh` + `meta-info.env` at repo root).
 regenerates. After editing that file on an incremental tree, `touch prepend.txt`
 (or delete `ext/rusefi/firmware/.config-sentinel`) so gen_config re-runs.
 
+`bit` lines in `board_engine_configuration.txt` must start at column 0:
+`split_lines` does not trim, so a leading tab makes gen_config fail to parse them.
+
 ## What this pass changes
 
 - **Hides** Fuel / Ignition / Cranking / Idle / Advanced engine menus by
