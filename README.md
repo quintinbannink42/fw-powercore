@@ -60,7 +60,9 @@ GitHub Actions: `.github/workflows/build-firmware.yaml` (needs submodule + optio
 ## Bring-up checklist
 
 1. Flash, confirm USB + CAN alive, LEDs on module.
-2. Toggle `auxOutputPins[0..3]` (HP) with no load; confirm gate drive.
+2. Under TunerStudio **PowerCore → Outputs**, assign Fuel Pump / Fan / GP PWM
+   (and the other ECU functions) to HP1–4 or ADIO1–8. Toggle with no load and
+   confirm gate drive.
 3. Apply known load; **calibrate** `HP_AMPS_PER_VOLT` / `ADIO_AMPS_PER_VOLT` (BOM starters only until silicon).
 4. Verify trip: inrush window, delayed OC, fast short, retry/latch ([`docs/EFUSE.md`](docs/EFUSE.md)).
 5. Enable ADIO pull-ups; check open-circuit voltage ~5 V through 4k7.

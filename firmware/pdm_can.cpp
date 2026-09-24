@@ -3,7 +3,9 @@
  * @brief Consume rusEFI ECU verbose CAN and publish PowerCore channel status.
  *
  * RX: custom_board_can_rx at pdmCanConsumeBaseId (Status / Speeds / Sensors1).
- * Drive: OutputPin on PROTECTED_PIN_* so the e-fuse SM still latches/trips.
+ * Drive: the ECU output pin for Fuel pump / Fan / Fan 2 / O2 heater / Main relay
+ * when that pin is assigned (e-fuse SM still owns PROTECTED_PIN_*). If the pin
+ * is Unassigned, the legacy protected pin is driven instead.
  * TX: custom_board_update_dash at pdmCanStatusBaseId (see powercore_pdm.dbc).
  */
 
@@ -19,14 +21,6 @@
 #endif
 
 static constexpr size_t kOwnedCount = 5;
-
-static const size_t kOwnedChannels[kOwnedCount] = {
-	kPdmCanChHp1Pump,
-	kPdmCanChHp2Fan,
-	kPdmCanChHp3Fan2,
-	kPdmCanChAdio1O2,
-	kPdmCanChAdio5Relay,
-};
 
 static const Gpio kOwnedPins[kOwnedCount] = {
 	Gpio::PROTECTED_PIN_0,
@@ -45,7 +39,7 @@ static const char* kOwnedNames[kOwnedCount] = {
 };
 
 static OutputPin s_ownedPins[kOwnedCount];
-static bool s_pinsClaimed = false;
+static bool s_roleClaimed[kOwnedCount] = {};
 
 static PdmCanEcuSignals s_ecu;
 static bool s_haveRx = false;
@@ -70,57 +64,102 @@ static uint8_t pdmCanFrameDlc(const CANRxFrame& frame) {
 }
 #endif
 
-static void pdmCanReleasePins() {
-	if (!s_pinsClaimed) {
-		return;
-	}
-	for (size_t i = 0; i < kOwnedCount; i++) {
-		s_ownedPins[i].deInit();
-	}
-	s_pinsClaimed = false;
+static int pdmProtectedBase() {
+	return static_cast<int>(Gpio::PROTECTED_PIN_0);
 }
 
-static void pdmCanClaimPins() {
-	if (s_pinsClaimed) {
+static PdmRolePins pdmReadRolePins() {
+	PdmRolePins roles;
+	roles.fuelPump = static_cast<int>(engineConfiguration->fuelPumpPin);
+	roles.fan = static_cast<int>(engineConfiguration->fanPin);
+	roles.fan2 = static_cast<int>(engineConfiguration->fan2Pin);
+	roles.o2Heater = static_cast<int>(engineConfiguration->o2heaterPin);
+	roles.mainRelay = static_cast<int>(engineConfiguration->mainRelayPin);
+	return roles;
+}
+
+static void pdmCanReleasePins() {
+	for (size_t i = 0; i < kOwnedCount; i++) {
+		if (!s_roleClaimed[i]) {
+			continue;
+		}
+		s_ownedPins[i].deInit();
+		s_roleClaimed[i] = false;
+	}
+}
+
+static void pdmCanClaimLegacyPins() {
+	if (!engineConfiguration->pdmCanConsumeEnable) {
+		pdmCanReleasePins();
 		return;
 	}
+	const int base = pdmProtectedBase();
+	const PdmRolePins roles = pdmReadRolePins();
+	const PdmCanOutputPlan plan = pdmCanPlanOutputs(roles, base);
 	for (size_t i = 0; i < kOwnedCount; i++) {
+		if (!plan.legacy[i]) {
+			if (s_roleClaimed[i]) {
+				s_ownedPins[i].deInit();
+				s_roleClaimed[i] = false;
+			}
+			continue;
+		}
+		if (s_roleClaimed[i]) {
+			continue;
+		}
 		s_ownedPins[i].initPin(kOwnedNames[i], kOwnedPins[i]);
 		s_ownedPins[i].setValue(false);
+		s_roleClaimed[i] = true;
 	}
-	s_pinsClaimed = true;
+}
+
+template <typename PinT>
+static void pdmClearPinIfTaken(PinT& pin, const PdmCanOutputPlan& plan, const PdmRolePins& roles, bool consume) {
+	const int base = pdmProtectedBase();
+	if (pdmOutputPinTaken(static_cast<int>(pin), plan, roles, base, consume)) {
+		pin = Gpio::Unassigned;
+	}
 }
 
 static void pdmCanUnassignConflictingOutputs() {
-	engineConfiguration->luaOutputPins[0] = Gpio::Unassigned;
-	engineConfiguration->luaOutputPins[1] = Gpio::Unassigned;
-	engineConfiguration->luaOutputPins[2] = Gpio::Unassigned;
-	engineConfiguration->luaOutputPins[4] = Gpio::Unassigned;
-	engineConfiguration->gppwm[0].pin = Gpio::Unassigned;
+	const bool consume = engineConfiguration->pdmCanConsumeEnable;
+	const PdmRolePins roles = pdmReadRolePins();
+	const PdmCanOutputPlan plan = pdmCanPlanOutputs(roles, pdmProtectedBase());
+	for (size_t i = 0; i < efi::size(engineConfiguration->luaOutputPins); i++) {
+		pdmClearPinIfTaken(engineConfiguration->luaOutputPins[i], plan, roles, consume);
+	}
+	for (size_t i = 0; i < efi::size(engineConfiguration->gppwm); i++) {
+		pdmClearPinIfTaken(engineConfiguration->gppwm[i].pin, plan, roles, consume);
+	}
+}
+
+template <typename PinT>
+static void pdmRestoreIfClear(PinT& pin, Gpio fallback, const PdmCanOutputPlan& plan, const PdmRolePins& roles) {
+	if (static_cast<int>(pin) != static_cast<int>(Gpio::Unassigned)) {
+		return;
+	}
+	if (pdmOutputPinTaken(static_cast<int>(fallback), plan, roles, pdmProtectedBase(), false)) {
+		return;
+	}
+	pin = fallback;
 }
 
 static void pdmCanRestoreDefaultOutputsIfClear() {
-	if (engineConfiguration->luaOutputPins[0] == Gpio::Unassigned) {
-		engineConfiguration->luaOutputPins[0] = Gpio::PROTECTED_PIN_0;
+	if (engineConfiguration->pdmCanConsumeEnable) {
+		return;
 	}
-	if (engineConfiguration->luaOutputPins[1] == Gpio::Unassigned) {
-		engineConfiguration->luaOutputPins[1] = Gpio::PROTECTED_PIN_1;
-	}
-	if (engineConfiguration->luaOutputPins[2] == Gpio::Unassigned) {
-		engineConfiguration->luaOutputPins[2] = Gpio::PROTECTED_PIN_2;
-	}
-	if (engineConfiguration->luaOutputPins[4] == Gpio::Unassigned) {
-		engineConfiguration->luaOutputPins[4] = Gpio::PROTECTED_PIN_4;
-	}
-	if (engineConfiguration->gppwm[0].pin == Gpio::Unassigned) {
-		engineConfiguration->gppwm[0].pin = Gpio::PROTECTED_PIN_8;
-	}
+	const PdmRolePins roles = pdmReadRolePins();
+	const PdmCanOutputPlan plan = pdmCanPlanOutputs(roles, pdmProtectedBase());
+	pdmRestoreIfClear(engineConfiguration->luaOutputPins[0], Gpio::PROTECTED_PIN_0, plan, roles);
+	pdmRestoreIfClear(engineConfiguration->luaOutputPins[1], Gpio::PROTECTED_PIN_1, plan, roles);
+	pdmRestoreIfClear(engineConfiguration->luaOutputPins[2], Gpio::PROTECTED_PIN_2, plan, roles);
+	pdmRestoreIfClear(engineConfiguration->luaOutputPins[4], Gpio::PROTECTED_PIN_4, plan, roles);
+	pdmRestoreIfClear(engineConfiguration->gppwm[0].pin, Gpio::PROTECTED_PIN_8, plan, roles);
 }
 
 void pdmCan_configOverrides() {
-	if (engineConfiguration->pdmCanConsumeEnable) {
-		pdmCanUnassignConflictingOutputs();
-	}
+	// Boot path: startPins has not run yet. Drop Lua / GP PWM that share an ECU pin.
+	pdmCanUnassignConflictingOutputs();
 }
 
 void pdmCan_onConfigurationChange(const engine_configuration_s* previousConfiguration) {
@@ -137,14 +176,12 @@ void pdmCan_onStopHardware() {
 	if (!engineConfiguration->pdmCanConsumeEnable) {
 		pdmCanRestoreDefaultOutputsIfClear();
 	}
+	// Burn restarts pins after this hook. Clear conflicts before startPins.
+	pdmCanUnassignConflictingOutputs();
 }
 
 void pdmCan_onStartHardware() {
-	if (engineConfiguration->pdmCanConsumeEnable) {
-		pdmCanClaimPins();
-	} else {
-		pdmCanReleasePins();
-	}
+	pdmCanClaimLegacyPins();
 }
 
 void pdmCan_initHardware() {
@@ -161,17 +198,48 @@ void pdmCan_periodicFast() {
 		return;
 	}
 
-	if (!s_pinsClaimed) {
-		pdmCanClaimPins();
-	}
-
 	const uint32_t nowMs = getTimeNowMs();
 	const bool alive = pdmCanEcuIsAlive(nowMs);
-	const uint16_t enable = pdmCanApplyTimeout(pdmCanMapEnables(s_ecu), true, alive);
+	bool on[kPdmCanRoleCount] = {};
+	pdmCanRoleLevels(s_ecu, true, alive, on);
 
 	for (size_t i = 0; i < kOwnedCount; i++) {
-		s_ownedPins[i].setValue(pdmCanBit(enable, kOwnedChannels[i]));
+		if (s_roleClaimed[i]) {
+			s_ownedPins[i].setValue(on[i]);
+		}
 	}
+}
+
+static void pdmCanApplyLogical(const PdmCanOutputPlan& plan, const bool on[kPdmCanRoleCount]) {
+	// Fan PWM mode owns the pin via startSimplePwm. Leave that curve alone.
+	if (plan.logical[0]) {
+		enginePins.fuelPumpRelay.setValue(on[0]);
+	}
+	if (plan.logical[1] && !engineConfiguration->fan1PwmEnabled) {
+		enginePins.fanRelay.setValue(on[1]);
+	}
+	if (plan.logical[2] && !engineConfiguration->fan2PwmEnabled) {
+		enginePins.fanRelay2.setValue(on[2]);
+	}
+	if (plan.logical[3]) {
+		enginePins.o2heater.setValue(on[3]);
+	}
+	if (plan.logical[4]) {
+		enginePins.mainRelay.setValue(on[4]);
+	}
+}
+
+void pdmCan_periodicSlow() {
+	if (!engineConfiguration->pdmCanConsumeEnable) {
+		return;
+	}
+	const uint32_t nowMs = getTimeNowMs();
+	const bool alive = pdmCanEcuIsAlive(nowMs);
+	bool on[kPdmCanRoleCount] = {};
+	pdmCanRoleLevels(s_ecu, true, alive, on);
+	const PdmCanOutputPlan plan = pdmCanPlanOutputs(pdmReadRolePins(), pdmProtectedBase());
+	// After engine modules, so CAN wins over local pump/fan/main-relay logic.
+	pdmCanApplyLogical(plan, on);
 }
 
 #if EFI_CAN_SUPPORT

@@ -13,6 +13,7 @@ void pdmCan_onStopHardware();
 void pdmCan_onConfigurationChange(const struct engine_configuration_s* previousConfiguration);
 void pdmCan_configOverrides();
 void pdmCan_periodicFast();
+void pdmCan_periodicSlow();
 
 #if EFI_CAN_SUPPORT
 #include "can.h"
