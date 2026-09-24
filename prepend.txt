@@ -48,10 +48,10 @@
 #define GAUGE_LUA_TO_6 20
 #define GAUGE_LUA_TO_7 20
 
-#define GPPWM_1_NAME "ADIO5"
-#define GPPWM_2_NAME "ADIO6"
-#define GPPWM_3_NAME "ADIO7"
-#define GPPWM_4_NAME "ADIO8"
+#define GPPWM_1_NAME "GP PWM 1"
+#define GPPWM_2_NAME "GP PWM 2"
+#define GPPWM_3_NAME "GP PWM 3"
+#define GPPWM_4_NAME "GP PWM 4"
 
 ! Documented small-can-board / PDM-style gate (firmware pages still compiled)
 #define ts_show_engine_control false
@@ -159,6 +159,13 @@
 #define ts_show_status_leds true
 #define ts_show_console_settings true
 #define ts_show_full_pinout true
+! Setup -> Outputs is the stock ECU page. Hide its panels so Fuel Pump / Fan /
+! Starter / Main relay / GP PWM are assigned only under PowerCore -> Outputs.
+#define ts_show_tachometer false
+#define ts_show_start_button false
+#define ts_show_starter_disable false
+#define ts_show_speedo_settings false
+
 #define ts_show_bench_test true
 #define ts_show_top_level_can_menu true
 #define ts_show_canbus_sniffer true

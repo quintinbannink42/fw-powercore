@@ -19,8 +19,11 @@ Identity stays **`powercore`**.
 | 8 | ADIO5 | `H144_OUT_IO5` | `H144_IN_O2S2` | yes |
 | 9-11 | ADIO6-8 | `H144_OUT_IO6-8` | RES1/2/3 (not `EFI_ADC` yet) | pin owned; OC waits on ADC3 |
 
-Drive HP1-4 + ADIO1-4 from Lua PWM 0-7. Drive ADIO5-8 from Generic PWM 1-4
-(on/off; Razor ADIO5-8 are not PWM outputs).
+Assign what each output does under **PowerCore → Outputs** (Fuel Pump, Fan 1,
+Fan 1 PWM, Starter Control, GP PWM, Main relay, Narrowband O2 heater, A/C
+Relay, and the other ECU output names). HP1–4 and ADIO1–8 are the pin list
+on those dialogs. ADIO5–8 are on/off on Razor (GP PWM frequency 0, or an
+on/off ECU function). ADIO6–8 software OC still waits on ADC3.
 
 ## Behaviour (Link Razor-style, mapped onto existing TS fields)
 
@@ -62,7 +65,9 @@ CAN status TX publishes the same currents plus commanded/actual/fault bits
 
 Landed. See [`CAN.md`](CAN.md). `pdmCanConsumeEnable` / `pdmCanConsumeBaseId`
 ingest rusEFI ECU verbose frames; `pdmCanStatusEnable` / `pdmCanStatusBaseId`
-publish DBC frames. Pump/fan examples drive HP1–3 through this e-fuse chip.
+publish DBC frames. Consume drives the Fuel Pump / Fan / Fan 2 / O2 heater /
+Main relay pins from Outputs (legacy HP1–3 / ADIO1 / ADIO5 if those pins are
+None). The e-fuse SM still owns the protected bank.
 
 ## What is left
 

@@ -81,6 +81,18 @@ Still open on the protection path:
 - ADIO6–8 software OC needs ADC3 analog (`H144_IN_RES1-3` are not `EFI_ADC`).
 - Over-temp staged shutdown (no TS field).
 
+## Outputs menu
+
+PowerCore → **Outputs** is the only place to assign what HP1–4 and ADIO1–8
+do. The dropdown uses rusEFI ECU names and the existing config fields
+(`fuelPumpPin`, `fanPin` / `fan1Pwm*`, `fan2Pin`, `starterControlPin`,
+`mainRelayPin`, `o2heaterPin`, `acRelayPin`, `gppwm1`–`4`, Lua PWM). It does
+not add a second function enum.
+
+E-fuse trip, faults, and CAN consume/status stay sibling pages. Setup →
+Outputs is left empty (its tach / starter panels are hidden) so those pins
+are not assigned from a second menu.
+
 ## CAN consume
 
 Landed. `pdmCanConsumeEnable` / base IDs drive HP1 (pump), HP2 (fan), HP3

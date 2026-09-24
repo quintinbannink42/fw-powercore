@@ -107,6 +107,75 @@ static void test_pack_status_and_currents() {
 	CHECK(f[6] == 1 && f[7] == 0);
 }
 
+static void test_output_plan_legacy_when_unassigned() {
+	const int base = 289; // PROTECTED_PIN_0
+	PdmRolePins roles;
+	const PdmCanOutputPlan plan = pdmCanPlanOutputs(roles, base);
+	CHECK(plan.legacy[0] && plan.channel[0] == 0);
+	CHECK(plan.legacy[1] && plan.channel[1] == 1);
+	CHECK(plan.legacy[2] && plan.channel[2] == 2);
+	CHECK(plan.legacy[3] && plan.channel[3] == 4);
+	CHECK(plan.legacy[4] && plan.channel[4] == 8);
+	CHECK(!plan.logical[0]);
+	CHECK(pdmOutputPinTaken(base + 0, plan, roles, base, true));
+	CHECK(!pdmOutputPinTaken(base + 0, plan, roles, base, false));
+	CHECK(!pdmOutputPinTaken(base + 3, plan, roles, base, true));
+}
+
+static void test_output_plan_follows_assigned_ecu_pins() {
+	const int base = 289;
+	PdmRolePins roles;
+	roles.fuelPump = base + 1; // HP2
+	roles.fan = base + 0;      // HP1
+	roles.fan2 = base + 2;
+	roles.o2Heater = base + 4;
+	roles.mainRelay = base + 9; // ADIO6
+	const PdmCanOutputPlan plan = pdmCanPlanOutputs(roles, base);
+	CHECK(plan.logical[0] && !plan.legacy[0] && plan.channel[0] == 1);
+	CHECK(plan.logical[1] && !plan.legacy[1] && plan.channel[1] == 0);
+	CHECK(plan.logical[4] && plan.channel[4] == 9);
+	CHECK(!plan.legacy[2] && !plan.legacy[3]);
+	CHECK(pdmOutputPinTaken(base + 1, plan, roles, base, false));
+	CHECK(!pdmOutputPinTaken(base + 8, plan, roles, base, true));
+}
+
+static void test_output_plan_suppresses_legacy_on_taken_channel() {
+	const int base = 289;
+	PdmRolePins roles;
+	roles.fuelPump = base + 1; // occupies fan's legacy HP2
+	const PdmCanOutputPlan plan = pdmCanPlanOutputs(roles, base);
+	CHECK(plan.logical[0] && plan.channel[0] == 1);
+	CHECK(!plan.legacy[1]);
+	CHECK(plan.legacy[2] && plan.channel[2] == 2);
+	CHECK(pdmOutputPinTaken(base + 1, plan, roles, base, true));
+	CHECK(pdmOutputPinTaken(base + 1, plan, roles, base, false));
+}
+
+static void test_output_plan_non_protected_pin_skips_legacy() {
+	const int base = 289;
+	PdmRolePins roles;
+	roles.fuelPump = 70; // on-chip pin, not the e-fuse bank
+	const PdmCanOutputPlan plan = pdmCanPlanOutputs(roles, base);
+	CHECK(plan.logical[0]);
+	CHECK(!plan.legacy[0]);
+	CHECK(plan.channel[0] == -1);
+	CHECK(plan.legacy[1] && plan.channel[1] == 1);
+}
+
+static void test_role_levels_follow_timeout() {
+	PdmCanEcuSignals s;
+	s.validStatus = true;
+	s.fuelPump = true;
+	s.mainRelay = true;
+	bool on[kPdmCanRoleCount] = {};
+	pdmCanRoleLevels(s, true, true, on);
+	CHECK(on[0] && !on[1] && on[4]);
+	pdmCanRoleLevels(s, true, false, on);
+	CHECK(!on[0] && !on[4]);
+	pdmCanRoleLevels(s, false, true, on);
+	CHECK(!on[0] && !on[4]);
+}
+
 static void test_pack_trip_reasons() {
 	uint8_t reasons[kPdmCanChannels] = {
 		1, 2, 3, 0, 1, 0, 0, 0, 2, 0, 0, 3
@@ -128,6 +197,11 @@ int main() {
 	test_decode_rpm_and_clt();
 	test_map_pump_fan_examples();
 	test_timeout_failsafe_clears_outputs();
+	test_output_plan_legacy_when_unassigned();
+	test_output_plan_follows_assigned_ecu_pins();
+	test_output_plan_suppresses_legacy_on_taken_channel();
+	test_output_plan_non_protected_pin_skips_legacy();
+	test_role_levels_follow_timeout();
 	test_pack_status_and_currents();
 	test_pack_trip_reasons();
 

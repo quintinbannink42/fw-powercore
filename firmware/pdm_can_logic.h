@@ -8,12 +8,12 @@
  *   +1 Speeds  — RPM
  *   +3 Sensors1 — CLT (byte2, offset -40 °C)
  *
- * Maps those signals onto protected PDM channels (pump / fan examples):
- *   HP1  PROTECTED_PIN_0  FuelPumpAct
- *   HP2  PROTECTED_PIN_1  Fan
- *   HP3  PROTECTED_PIN_2  Fan2
- *   ADIO1 PROTECTED_PIN_4  EGOHeatAct
- *   ADIO5 PROTECTED_PIN_8  MainRelayAct
+ * Fresh tunes assign the same map on ECU output pins (fuelPumpPin, fanPin,
+ * fan2Pin, o2heaterPin). mainRelayPin stays Unassigned so the local main-relay
+ * controller does not hold a channel on. While consume is on, an Unassigned
+ * role still drives its legacy protected pin (HP1 / HP2 / HP3 / ADIO1 / ADIO5).
+ * An assigned role drives that ECU pin instead, and the legacy pin is not
+ * claimed if another role already owns it.
  *
  * Status TX at pdmCanStatusBaseId (default 0x240) is packed here; see
  * firmware/powercore_pdm.dbc and docs/CAN.md.
@@ -43,6 +43,37 @@ static constexpr uint16_t kPdmCanOwnedMask =
 	(1u << kPdmCanChHp3Fan2) |
 	(1u << kPdmCanChAdio1O2) |
 	(1u << kPdmCanChAdio5Relay);
+
+static constexpr int kPdmCanRoleCount = 5;
+// Role order: fuel pump, fan, fan 2, O2 heater, main relay.
+static constexpr int kPdmLegacyChannelByRole[kPdmCanRoleCount] = {
+	static_cast<int>(kPdmCanChHp1Pump),
+	static_cast<int>(kPdmCanChHp2Fan),
+	static_cast<int>(kPdmCanChHp3Fan2),
+	static_cast<int>(kPdmCanChAdio1O2),
+	static_cast<int>(kPdmCanChAdio5Relay),
+};
+
+/** ECU pin ordinals. 0 is Unassigned (rusEFI Gpio::Unassigned). */
+struct PdmRolePins {
+	int fuelPump = 0;
+	int fan = 0;
+	int fan2 = 0;
+	int o2Heater = 0;
+	int mainRelay = 0;
+};
+
+/**
+ * logical: drive the ECU output pin (engine fuel pump / fan / …).
+ * legacy: consume is on and the ECU pin is Unassigned, so drive the
+ * historical protected channel.
+ * channel: protected index when the driven pin is PROTECTED_PIN_n, else -1.
+ */
+struct PdmCanOutputPlan {
+	bool logical[kPdmCanRoleCount] = {};
+	bool legacy[kPdmCanRoleCount] = {};
+	int channel[kPdmCanRoleCount] = {};
+};
 
 // rusEFI verbose offsets relative to verboseCanBaseAddress / pdmCanConsumeBaseId
 static constexpr uint16_t kPdmCanEcuStatusOff = 0;
@@ -142,6 +173,101 @@ inline bool pdmCanEcuAlive(bool haveRx, uint32_t nowMs, uint32_t lastRxMs, uint3
 		return false;
 	}
 	return (nowMs - lastRxMs) < timeoutMs;
+}
+
+inline void pdmRolePinList(const PdmRolePins& roles, int out[kPdmCanRoleCount]) {
+	out[0] = roles.fuelPump;
+	out[1] = roles.fan;
+	out[2] = roles.fan2;
+	out[3] = roles.o2Heater;
+	out[4] = roles.mainRelay;
+}
+
+inline bool pdmPinIsUnassigned(int pin) {
+	return pin == 0;
+}
+
+/** protectedBase is the ordinal of PROTECTED_PIN_0. Returns -1 if not in the 12-channel bank. */
+inline int pdmProtectedChannel(int pin, int protectedBase) {
+	if (pdmPinIsUnassigned(pin)) {
+		return -1;
+	}
+	const int channel = pin - protectedBase;
+	if (channel < 0 || channel >= static_cast<int>(kPdmCanChannels)) {
+		return -1;
+	}
+	return channel;
+}
+
+/**
+ * Build the consume drive plan. Legacy fallbacks that would land on a channel
+ * already chosen by an assigned ECU pin are dropped so two roles do not fight.
+ */
+inline PdmCanOutputPlan pdmCanPlanOutputs(const PdmRolePins& roles, int protectedBase) {
+	PdmCanOutputPlan plan{};
+	int pins[kPdmCanRoleCount];
+	pdmRolePinList(roles, pins);
+	bool taken[kPdmCanChannels] = {};
+
+	for (int i = 0; i < kPdmCanRoleCount; i++) {
+		plan.channel[i] = -1;
+		const int channel = pdmProtectedChannel(pins[i], protectedBase);
+		if (!pdmPinIsUnassigned(pins[i])) {
+			plan.logical[i] = true;
+			plan.legacy[i] = false;
+			plan.channel[i] = channel;
+			if (channel >= 0) {
+				taken[channel] = true;
+			}
+		}
+	}
+
+	for (int i = 0; i < kPdmCanRoleCount; i++) {
+		if (!pdmPinIsUnassigned(pins[i])) {
+			continue;
+		}
+		const int legacyChannel = kPdmLegacyChannelByRole[i];
+		if (taken[legacyChannel]) {
+			plan.logical[i] = false;
+			plan.legacy[i] = false;
+			plan.channel[i] = -1;
+			continue;
+		}
+		plan.logical[i] = false;
+		plan.legacy[i] = true;
+		plan.channel[i] = legacyChannel;
+		taken[legacyChannel] = true;
+	}
+	return plan;
+}
+
+/** True when Lua / GP PWM must release this pin so an ECU function or legacy consume owns it. */
+inline bool pdmOutputPinTaken(int pin, const PdmCanOutputPlan& plan, const PdmRolePins& roles,
+		int protectedBase, bool consumeEnabled) {
+	if (pdmPinIsUnassigned(pin)) {
+		return false;
+	}
+	int rolePins[kPdmCanRoleCount];
+	pdmRolePinList(roles, rolePins);
+	for (int i = 0; i < kPdmCanRoleCount; i++) {
+		if (plan.logical[i] && rolePins[i] == pin) {
+			return true;
+		}
+		if (consumeEnabled && plan.legacy[i] && pin == protectedBase + kPdmLegacyChannelByRole[i]) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/** Per-role on/off after the 500 ms ECU timeout. Order matches kPdmLegacyChannelByRole. */
+inline void pdmCanRoleLevels(const PdmCanEcuSignals& s, bool consumeEnable, bool ecuAlive, bool on[kPdmCanRoleCount]) {
+	const bool live = consumeEnable && ecuAlive && s.validStatus;
+	on[0] = live && s.fuelPump;
+	on[1] = live && s.fan;
+	on[2] = live && s.fan2;
+	on[3] = live && s.o2Heater;
+	on[4] = live && s.mainRelay;
 }
 
 /** Owned channels are forced off when consume is disabled or the ECU timed out. */

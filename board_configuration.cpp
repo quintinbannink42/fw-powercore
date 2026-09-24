@@ -12,7 +12,9 @@
  * engineConfiguration->pdmChannelTrip[]. Do NOT invent a parallel GPIO layer.
  *
  * CAN: consume rusEFI ECU verbose broadcast (pdmCanConsume*) and publish
- * channel current/fault (pdmCanStatus*). See docs/CAN.md.
+ * channel current/fault (pdmCanStatus*). Consume follows the ECU output pins
+ * assigned under TunerStudio Outputs (legacy HP/ADIO map if that pin is None).
+ * See docs/CAN.md.
  *
  * Pin map: hellen-pdm-razor/PINMAP.md (authoritative)
  */
@@ -88,6 +90,11 @@ static void pdmBoardPeriodicFast() {
 	pdmEfuse_check();
 }
 
+static void pdmBoardPeriodicSlow() {
+	// Runs after fuel pump / fan / main relay / O2 heater modules.
+	pdmCan_periodicSlow();
+}
+
 static void pdmBoardConfigOverrides() {
 	pdmCan_configOverrides();
 }
@@ -119,21 +126,26 @@ static void pdmBoardDefaultConfiguration() {
 	engineConfiguration->canWriteEnabled = true;
 	engineConfiguration->canBaudRate = static_cast<can_baudrate_e>(can_baudrate_e_B500KBPS);
 
-	// LUA_PWM_COUNT=8: PWM-capable protected bank HP1-4 + ADIO1-4
-	engineConfiguration->luaOutputPins[0] = Gpio::PROTECTED_PIN_0; // HP1
-	engineConfiguration->luaOutputPins[1] = Gpio::PROTECTED_PIN_1; // HP2
-	engineConfiguration->luaOutputPins[2] = Gpio::PROTECTED_PIN_2; // HP3
-	engineConfiguration->luaOutputPins[3] = Gpio::PROTECTED_PIN_3; // HP4
-	engineConfiguration->luaOutputPins[4] = Gpio::PROTECTED_PIN_4; // ADIO1
-	engineConfiguration->luaOutputPins[5] = Gpio::PROTECTED_PIN_5; // ADIO2
-	engineConfiguration->luaOutputPins[6] = Gpio::PROTECTED_PIN_6; // ADIO3
-	engineConfiguration->luaOutputPins[7] = Gpio::PROTECTED_PIN_7; // ADIO4
+	// ECU functions on the historical CAN map. Assign anything else from Outputs.
+	// Lua PWM and GP PWM stay Unassigned so they do not fight these pins.
+	// Main relay stays Unassigned: with EFI_MAIN_RELAY_CONTROL off the local
+	// controller holds that pin ON. CAN consume still drives legacy ADIO5
+	// until Main relay is assigned.
+	engineConfiguration->fuelPumpPin = Gpio::PROTECTED_PIN_0; // HP1
+	engineConfiguration->fanPin = Gpio::PROTECTED_PIN_1;      // HP2
+	engineConfiguration->fan2Pin = Gpio::PROTECTED_PIN_2;     // HP3
+	engineConfiguration->o2heaterPin = Gpio::PROTECTED_PIN_4; // ADIO1
+	engineConfiguration->mainRelayPin = Gpio::Unassigned;
+	engineConfiguration->startUpFuelPumpDuration = 0;
+	engineConfiguration->disableFan1WhenStopped = true;
+	engineConfiguration->disableFan2WhenStopped = true;
 
-	// ADIO5-8 are on/off (not PWM on Razor). Default GPPWM 1-4 onto the second bank.
-	engineConfiguration->gppwm[0].pin = Gpio::PROTECTED_PIN_8;  // ADIO5
-	engineConfiguration->gppwm[1].pin = Gpio::PROTECTED_PIN_9;  // ADIO6
-	engineConfiguration->gppwm[2].pin = Gpio::PROTECTED_PIN_10; // ADIO7
-	engineConfiguration->gppwm[3].pin = Gpio::PROTECTED_PIN_11; // ADIO8
+	for (size_t i = 0; i < efi::size(engineConfiguration->luaOutputPins); i++) {
+		engineConfiguration->luaOutputPins[i] = Gpio::Unassigned;
+	}
+	for (size_t i = 0; i < efi::size(engineConfiguration->gppwm); i++) {
+		engineConfiguration->gppwm[i].pin = Gpio::Unassigned;
+	}
 
 	// PDM, not an engine ECU — hide injection/ignition gated TunerStudio fields
 	engineConfiguration->isInjectionEnabled = false;
@@ -204,6 +216,7 @@ void setup_custom_board_overrides() {
 	custom_board_StopHardware = pdmBoardStopHardware;
 	custom_board_StartHardware = pdmBoardStartHardware;
 	custom_board_periodicFastCallback = pdmBoardPeriodicFast;
+	custom_board_periodicSlowCallback = pdmBoardPeriodicSlow;
 #if EFI_CAN_SUPPORT
 	custom_board_can_rx = pdmCan_onRx;
 	custom_board_update_dash = pdmCan_updateDash;

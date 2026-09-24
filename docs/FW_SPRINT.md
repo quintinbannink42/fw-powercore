@@ -112,3 +112,11 @@ bank. Host tests: `firmware/run_pdm_can_logic_test.sh`.
 - **INI:** `generated/tunerstudio/generated/rusefi_powercore.ini` — CAN consume/status dialog is live (not placeholder); signature contains `powercore`
 - **Bin:** `ext/rusefi/firmware/build/rusefi.bin` 579180 B; flash0 73.65% of 768 KB
 - TS signature: `rusEFI cursor/pdm-can-consume-0654.2026.09.21.powercore`
+
+## Outputs menu — 2026-09-24
+
+PowerCore → Outputs lists ECU functions (Fuel Pump, Fan 1, Fan 1 PWM, Fan 2,
+Starter Control, Main relay, Narrowband O2 heater, Air Conditioning,
+Tachometer, GP PWM 1–4, Lua Script PWM Outputs) on one dropdown. Pin choices
+are HP1–4 and ADIO1–8. CAN consume follows those pins, with the previous
+HP/ADIO hard-map kept only while the matching pin is None.

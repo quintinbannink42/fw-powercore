@@ -36,21 +36,35 @@ Identity stays **`powercore`**.
      `0x200`.
 5. Burn and power-cycle if TunerStudio marks CAN pins as requiring it.
 
-When consume is enabled, firmware claims:
+Assign the outputs under **PowerCore → Outputs** (Fuel Pump, Fan 1, Fan 2,
+Narrowband O2 heater, Main relay). Consume drives those ECU pins:
 
-| ECU signal (BASE0) | PDM channel | Pin |
-|--------------------|-------------|-----|
-| `FuelPumpAct` | HP1 (pump) | `PROTECTED_PIN_0` |
-| `Fan` | HP2 (fan) | `PROTECTED_PIN_1` |
-| `Fan2` | HP3 (fan 2) | `PROTECTED_PIN_2` |
-| `EGOHeatAct` | ADIO1 | `PROTECTED_PIN_4` |
-| `MainRelayAct` | ADIO5 | `PROTECTED_PIN_8` |
+| ECU signal (BASE0) | TunerStudio field | Fresh tune | If the field is None |
+|--------------------|-------------------|------------|----------------------|
+| `FuelPumpAct` | Fuel Pump output | HP1 | legacy HP1 |
+| `Fan` | Fan Pin | HP2 | legacy HP2 |
+| `Fan2` | Fan 2 | HP3 | legacy HP3 |
+| `EGOHeatAct` | Narrowband O2 heater output | ADIO1 | legacy ADIO1 |
+| `MainRelayAct` | Main Relay Pin | None | legacy ADIO5 |
 
-Those five Lua PWM / Generic PWM slots are forced **Unassigned** so they
-cannot fight `writePad`. HP4 and ADIO2–4 / ADIO6–8 stay on Lua / GPPWM.
+Lua PWM and GP PWM on a pin that an ECU function uses are forced **None**
+so they cannot fight `writePad`. A legacy pin is also released while consume
+is on and that function's pin is still None. If you assign Fuel Pump to a
+channel another legacy role wanted (for example HP2), that legacy role is
+dropped — assign Fan explicitly.
 
-If no matching ECU frame arrives for **500 ms**, the five consumed channels
-are commanded **off** (timeout failsafe). Re-appear of BASE0/1/3 clears it.
+Fan **PWM mode** (Fan 1 PWM / Fan 2 PWM) keeps the local PWM curve. Consume
+does not override a fan while PWM mode is on; use on/off Fan for CAN.
+
+With CAN consume **off**, the assigned ECU outputs follow local rusEFI logic
+(fuel-pump prime, fan vs CLT, and so on). Fresh tunes set prime duration to
+0 and "Disable when engine stopped" on both fans so a missing CLT sensor does
+not turn a fan on. **Main relay** is left None on a fresh tune: this firmware
+builds with main-relay control off, so an assigned Main relay pin is held
+**ON** until consume is enabled and then follows `MainRelayAct`.
+
+If no matching ECU frame arrives for **500 ms**, the consumed outputs are
+commanded **off** (timeout failsafe). Re-appear of BASE0/1/3 clears it.
 
 Outputs still go through the e-fuse SM (`docs/EFUSE.md`): inrush / OC / short
 / retry / latch apply to CAN-driven channels the same as Lua-driven ones.
@@ -85,8 +99,8 @@ Trip reason: 0 none, 1 fast short, 2 overcurrent, 3 sense fail.
 
 1. ECU verbose on, PDM consume off: SavvyCAN + DBC should show BASE0 pump/fan
    bits changing when the ECU commands those outputs.
-2. Enable PDM consume: HP1 follows fuel pump, HP2/HP3 follow fans. Unplug CAN:
-   those three drop within 500 ms.
+2. Enable PDM consume: the Fuel Pump / Fan / Fan 2 pins follow the ECU.
+   Unplug CAN: those outputs drop within 500 ms.
 3. Enable status TX: `PDM_STATUS0` `EcuAlive` tracks the timeout;
    `HP1_A` tracks pump current after the e-fuse window.
 
