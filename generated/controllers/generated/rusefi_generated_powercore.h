@@ -1243,10 +1243,10 @@
 #define Gpio_TLE9104_5_OUT_2 343
 #define Gpio_TLE9104_5_OUT_3 344
 #define Gpio_Unassigned 0
-#define GPPWM_1_NAME "ADIO5"
-#define GPPWM_2_NAME "ADIO6"
-#define GPPWM_3_NAME "ADIO7"
-#define GPPWM_4_NAME "ADIO8"
+#define GPPWM_1_NAME "GP PWM 1"
+#define GPPWM_2_NAME "GP PWM 2"
+#define GPPWM_3_NAME "GP PWM 3"
+#define GPPWM_4_NAME "GP PWM 4"
 #define gppwm_channel_e_auto_enum 0="GPPWM_Zero",9="GPPWM_AccelPedal",16="GPPWM_AuxLinear1",17="GPPWM_AuxLinear2",29="GPPWM_AuxLinear3",30="GPPWM_AuxLinear4",7="GPPWM_AuxTemp1",8="GPPWM_AuxTemp2",26="GPPWM_BaroPressure",3="GPPWM_Clt",25="GPPWM_DetectedGear",27="GPPWM_Egt1",28="GPPWM_Egt2",15="GPPWM_EthanolPercent",5="GPPWM_FuelLoad",34="GPPWM_FuelPressure",18="GPPWM_GppwmOutput1",19="GPPWM_GppwmOutput2",20="GPPWM_GppwmOutput3",21="GPPWM_GppwmOutput4",4="GPPWM_Iat",6="GPPWM_IgnLoad",22="GPPWM_LuaGauge1",23="GPPWM_LuaGauge2",2="GPPWM_Map",32="GPPWM_OilPressure",33="GPPWM_OilTemp",24="GPPWM_Rpm",35="GPPWM_ThrottleRatio",1="GPPWM_Tps",12="GPPWM_VVT_1E",11="GPPWM_VVT_1I",14="GPPWM_VVT_2E",13="GPPWM_VVT_2I",10="GPPWM_Vbatt",31="GPPWM_VehicleSpeed"
 #define gppwm_channel_e_GPPWM_AccelPedal 9
 #define gppwm_channel_e_GPPWM_AuxLinear1 16
@@ -1644,7 +1644,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 288577415
+#define SIGNATURE_HASH 3570617071
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2222,7 +2222,7 @@
 #define ts_show_sent false
 #define ts_show_software_knock false
 #define ts_show_sparkHardwareLatencyCorrection true
-#define ts_show_speedo_settings true
+#define ts_show_speedo_settings false
 #define ts_show_speedSensorCan true
 #define ts_show_spi false
 #define ts_show_spi1_enable true
@@ -2238,15 +2238,15 @@
 #define ts_show_spi6_enable true
 #define ts_show_spi6_pins false
 #define ts_show_staged_injection true
-#define ts_show_start_button true
-#define ts_show_starter_disable true
+#define ts_show_start_button false
+#define ts_show_starter_disable false
 #define ts_show_startup_map_baro_grab true
 #define ts_show_status_leds true
 #define ts_show_stepper_hbridge true
 #define ts_show_stepper_push_pull false
 #define ts_show_strokes false
 #define ts_show_sync_cam true
-#define ts_show_tachometer true
+#define ts_show_tachometer false
 #define ts_show_tcu false
 #define ts_show_throttle_switch true
 #define ts_show_tle8888 false
@@ -2289,7 +2289,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI cursor/pdm-can-consume-0654.2026.09.21.powercore.288577415"
+#define TS_SIGNATURE "rusEFI cursor/powercore-outputs-menu-2f75.2026.09.24.powercore.3570617071"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

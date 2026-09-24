@@ -2,5 +2,5 @@
 // CHeaderConsumer was generated automatically by rusEFI tool config_definition-all.jar based on gen_config.sh by SignatureConsumer
 //
 
-#define SIGNATURE_HASH 288577415
-#define TS_SIGNATURE "rusEFI cursor/pdm-can-consume-0654.2026.09.21.powercore.288577415"
+#define SIGNATURE_HASH 3570617071
+#define TS_SIGNATURE "rusEFI cursor/powercore-outputs-menu-2f75.2026.09.24.powercore.3570617071"
