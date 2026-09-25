@@ -174,5 +174,17 @@
 #define ts_show_gppwm_3 true
 #define ts_show_gppwm_4 true
 #define ts_show_aux_sensors true
-#define ts_show_live_data true
+! View is only engine live-data fragments (fuel_computer, ignition_state, …).
+! gen_config_pdm.sh also wraps LIVE_DATA_MENU so those rows do not attach to Help.
+#define ts_show_live_data false
 #define ts_show_analog_input_settings true
+
+! Fields that still render on pages we keep (vehicle info, analog, CAN VSS panel).
+#define ts_show_number_of_cylinders false
+#define ts_show_startup_map_baro_grab false
+#define ts_show_speedSensorCan false
+#define ts_show_primary_trigger false
+#define ts_show_trigger_console false
+#define ts_show_trigger_pins false
+#define ts_show_trigger_gap_override_flag false
+#define ts_show_globalTriggerAngleOffset false

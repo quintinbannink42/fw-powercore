@@ -1644,7 +1644,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3570617071
+#define SIGNATURE_HASH 3497198073
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2143,7 +2143,7 @@
 #define ts_show_gasoline_scale false
 #define ts_show_gdi false
 #define ts_show_gdi_low_level true
-#define ts_show_globalTriggerAngleOffset true
+#define ts_show_globalTriggerAngleOffset false
 #define ts_show_gppwm1_pin true
 #define ts_show_gppwm2_pin true
 #define ts_show_gppwm3_error_value true
@@ -2191,7 +2191,7 @@
 #define ts_show_knock_cylinder_mapping false
 #define ts_show_l9779 false
 #define ts_show_linear_thermistors false
-#define ts_show_live_data true
+#define ts_show_live_data false
 #define ts_show_long_term_fuel_trim false
 #define ts_show_ltft_sd_card_message false
 #define ts_show_maf false
@@ -2204,7 +2204,7 @@
 #define ts_show_mc33810_cs false
 #define ts_show_measureMapOnlyInOneCylinder true
 #define ts_show_multispark true
-#define ts_show_number_of_cylinders true
+#define ts_show_number_of_cylinders false
 #define ts_show_odd_fire true
 #define ts_show_oil_pressure_sensor false
 #define ts_show_oil_sensors false
@@ -2212,7 +2212,7 @@
 #define ts_show_onboard_accelerometer false
 #define ts_show_output_diag false
 #define ts_show_popular_vehicles false
-#define ts_show_primary_trigger true
+#define ts_show_primary_trigger false
 #define ts_show_reboot_to_dfu true
 #define ts_show_reset_calibrations true
 #define ts_show_rotary false
@@ -2223,7 +2223,7 @@
 #define ts_show_software_knock false
 #define ts_show_sparkHardwareLatencyCorrection true
 #define ts_show_speedo_settings false
-#define ts_show_speedSensorCan true
+#define ts_show_speedSensorCan false
 #define ts_show_spi false
 #define ts_show_spi1_enable true
 #define ts_show_spi1_pins true
@@ -2240,7 +2240,7 @@
 #define ts_show_staged_injection true
 #define ts_show_start_button false
 #define ts_show_starter_disable false
-#define ts_show_startup_map_baro_grab true
+#define ts_show_startup_map_baro_grab false
 #define ts_show_status_leds true
 #define ts_show_stepper_hbridge true
 #define ts_show_stepper_push_pull false
@@ -2256,10 +2256,10 @@
 #define ts_show_tps_sent false
 #define ts_show_traction_control false
 #define ts_show_trigger_advanced false
-#define ts_show_trigger_console true
-#define ts_show_trigger_gap_override_flag true
+#define ts_show_trigger_console false
+#define ts_show_trigger_gap_override_flag false
 #define ts_show_trigger_overrides false
-#define ts_show_trigger_pins true
+#define ts_show_trigger_pins false
 #define ts_show_tsp_pps_limits true
 #define ts_show_tunerstudio_port true
 #define ts_show_turbo_sensors false
@@ -2289,7 +2289,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI cursor/powercore-outputs-menu-2f75.2026.09.24.powercore.3570617071"
+#define TS_SIGNATURE "rusEFI cursor/strip-non-pdm-ts-menus-d83f.2026.09.25.powercore.3497198073"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

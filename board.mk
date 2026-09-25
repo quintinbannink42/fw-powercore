@@ -32,3 +32,8 @@ DDEFS += -DEFI_MAIN_RELAY_CONTROL=FALSE
 # EFI_LTFT_CONTROL FALSE is declared in prepend.txt and lifted into DDEFS by
 # firmware/Makefile (TS page guard). Do not set it here — tunerstudio.cpp
 # static_asserts it matches generated LTFT_PAGE_ENABLED.
+
+# Engine menus that the shared template does not flag are gated in
+# firmware/gen_config_pdm.sh (rusEFI CUSTOM_GEN_CONFIG). The script restores
+# tunerstudio.template.ini after generation.
+CUSTOM_GEN_CONFIG = firmware/gen_config_pdm.sh
